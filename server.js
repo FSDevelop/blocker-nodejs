@@ -7,19 +7,22 @@ var server = require('http').createServer(app);
 // Server socket with Socket.io
 var io = require('socket.io')(server);
 
-// On client connect
-io.on('connection', function(client) {
-	console.log('Client connected');
+// On player connect
+io.on('connection', function(player) {
+	// When a player is connected
+	player.on('join', function(playerJoined) {
+		console.log('Player connected: ' + playerJoined.username);
+	});
 	
-	// When a client is moving
-	client.on('move', function(playerMoved) {
+	// When a player is moving
+	player.on('move', function(playerMoved) {
 		// Send that move to everyone
-		client.broadcast.emit('move', playerMoved);
+		player.broadcast.emit('move', playerMoved);
 	});
 	
 	// When received an alive event (user still online)
-	client.on('alive', function(playerAlive) {
-		client.broadcast.emit('move', playerAlive);
+	player.on('alive', function(playerAlive, clientTime) {
+		player.broadcast.emit('move', playerAlive);
 	});
 });
 
@@ -27,7 +30,7 @@ app.get('/blocker', function(req, res) {
 	res.sendFile(__dirname + '/index.html');
 });
 
-console.log('Waiting for clients...');
+console.log('Waiting for players...');
 
 // Listening to the port 8080 http://localhost:8080/blocker
 server.listen(8080);

@@ -15,6 +15,10 @@ var socket, canvas, canvasContext;
 var sprite = document.getElementById("sprites");
 
 if (username != null && username != '') {
+
+    // Make connection with server
+    socket = io.connect('http://192.168.1.35:8080');
+    
     // Generate a random number (0, 50, 100 or 150) to set the random sprite
     rNum = -1;
     while (rNum != 0 && rNum != 50 && rNum != 100 && rNum != 150) {
@@ -26,6 +30,7 @@ if (username != null && username != '') {
     
     // Add client connected player to the map
     player.push({username: username, x: 0, y: 0, sprite: userSprite});
+    socket.emit('join', player[0]);
         
     // Initialize game
     setCanvas();
@@ -33,11 +38,21 @@ if (username != null && username != '') {
     // Every 100 miliseconds send an alive event to the server to avoid disconnection
     setInterval(function(){
       // Emit an alive event to the server
-      socket.emit('alive', {username: username, x: player[0].x, y: player[0].y, sprite: player[0].sprite});
+      var d = new Date();
+      myTime = d.getTime()
+      socket.emit('alive', {username: username, x: player[0].x, y: player[0].y, sprite: player[0].sprite}, myTime);
     }, 100);
     
-    // Make connection with server
-    socket = io.connect('http://192.168.1.35:8080');
+    socket.on('disconnect', function(playerDisconnected) {
+        var index = -1;
+        for (var i = 0; i < player.length; i++) {
+            if (player[i].username == playerDisconnected.username) {
+                index = i; break;
+            }
+        }
+        
+        player.splice(index, 1);
+    });
           
     // Update position on action from client
     socket.on('move', function(playerMoved) {

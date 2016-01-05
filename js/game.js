@@ -39,9 +39,6 @@ window.addEventListener('keydown', function(e) {
         case 39: movePlayer('right'); break;
         case 40: movePlayer('down'); break;
     }
-    
-    // Draw all players again
-    //render();
 });
 
 function movePlayer(direction) {
