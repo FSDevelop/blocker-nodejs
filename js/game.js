@@ -22,9 +22,13 @@ function render() {
 var shoot = new Array();
 
 function drawShots() {
-    for (var i = 0; i < shoot.length; i++) {
-        canvasContext.fillStyle("#000");
-        canvasContext.fillRect(shoot.position.x, shoot.position.y, 10, 10);
+    if (shoot.length > 0) {
+        for (var i = 0; i < shoot.length; i++) {
+            canvasContext.fillStyle = "#000";
+            canvasContext.arc(shoot.position.x, shoot.position.y, 10, 0, Math.PI * 180, false);
+            shoot.position.x += 2;
+            shoot.position.y += 4;
+        }
     }
 }
 
