@@ -15,8 +15,41 @@ function clearCanvas() {
 
 function render() {
     clearCanvas();
+    drawPlayers();
+    drawShots();
+}
+
+var shoot = new Array();
+
+function drawShots() {
+    for (var i = 0; i < shoot.length; i++) {
+        canvasContext.fillStyle("#000");
+        canvasContext.fillRect(shoot.position.x, shoot.position.y, 10, 10);
+    }
+}
+
+// On shoting
+window.addEventListener('mousedown', function(e) {
+    var destX = e.x;
+    var destY = e.y;
+    var me = player[0];
     
-    // Draw players
+    destX -= canvas.offsetLeft;
+    destY -= canvas.offsetTop;
+    
+    // Adding a shoot
+    shoot.push({
+        shoter:         me,
+        position:       {x: me.x + 25, y: me.y + 25}, 
+        destination:    {x: destX, y: destY}
+    });
+});
+
+function moveShot() {
+    
+}
+
+function drawPlayers() {
     for (var i = 0; i < player.length; i++) {
         // Draw sprite
         pSprite = player[i].sprite;

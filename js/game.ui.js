@@ -10,7 +10,7 @@ $(function() {
     $('.username-div input').focus();
     
     // When the user press enter
-    $('.username-div input').keydown(function(e){
+    $('.username-div input').keydown(function(e) {
         if (e.keyCode == 13) {
             
             // Validate input
