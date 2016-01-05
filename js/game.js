@@ -29,30 +29,56 @@ function render() {
         canvasContext.fillText(player[i].username, player[i].x + 25, player[i].y + 25);
     }
 }
+
+var animationOn = false;
   
 window.addEventListener('keydown', function(e) {
     switch (e.keyCode) {
-        case 37: player[0].x -= 50; break;
-        case 38: player[0].y -= 50; break;
-        case 39: player[0].x += 50; break;
-        case 40: player[0].y += 50; break;
+        case 37: movePlayer('left'); break;
+        case 38: movePlayer('up'); break;
+        case 39: movePlayer('right'); break;
+        case 40: movePlayer('down'); break;
     }
-    
-    if (player[0].x < 0) {
-        player[0].x = 650;
-    } else if (player[0].x > 650) {
-        player[0].x = 0;
-    }
-    
-    if (player[0].y < 0) {
-        player[0].y = 650;
-    } else if (player[0].y > 650) {
-        player[0].y = 0;
-    }
-    
-    // Emit a move event to the server
-    socket.emit('move', {username: username, x: player[0].x, y: player[0].y, sprite: player[0].sprite});
     
     // Draw all players again
-    render();
+    //render();
 });
+
+function movePlayer(direction) {
+    if (!animationOn) {
+        animationOn = true;
+        movedPlayer = player[0];
+        animationMovement = 0;
+        animation = setInterval(function() {
+            animationMovement++;
+            
+            switch (direction) {
+                case 'left': movedPlayer.x -= 5; break;
+                case 'right': movedPlayer.x += 5; break;
+                case 'up': movedPlayer.y -= 5; break;
+                case 'down': movedPlayer.y += 5; break;
+            }
+            
+            if (player[0].x < 0) {
+                player[0].x = 695;
+            } else if (player[0].x > 695) {
+                player[0].x = 0;
+            }
+            
+            if (player[0].y < 0) {
+                player[0].y = 695;
+            } else if (player[0].y > 695) {
+                player[0].y = 0;
+            }
+            
+            // Emit a move event to the server
+            socket.emit('move', {username: username, x: movedPlayer.x, y: movedPlayer.y, sprite: movedPlayer.sprite});
+            render();
+            
+            if (animationMovement == 10) {
+                clearInterval(animation);
+                animationOn = false;
+            }
+        }, 5);
+    }
+}
