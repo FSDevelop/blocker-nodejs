@@ -30,7 +30,9 @@ if (username != null && username != '') {
     
     // Add client connected player to the map
     player.push({username: username, x: 0, y: 0, sprite: userSprite});
-    socket.emit('join', player[0]);
+    var d = new Date();
+    myTime = d.getTime()
+    socket.emit('join', player[0], myTime);
         
     // Initialize game
     setCanvas();
@@ -43,15 +45,13 @@ if (username != null && username != '') {
       socket.emit('alive', {username: username, x: player[0].x, y: player[0].y, sprite: player[0].sprite}, myTime);
     }, 100);
     
-    socket.on('disconnect', function(playerDisconnected) {
+    socket.on('afk', function(playerDisconnected) {
         var index = -1;
         for (var i = 0; i < player.length; i++) {
             if (player[i].username == playerDisconnected.username) {
-                index = i; break;
+                player.splice(i, 1);
             }
         }
-        
-        player.splice(index, 1);
     });
           
     // Update position on action from client

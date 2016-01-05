@@ -10,8 +10,21 @@ var io = require('socket.io')(server);
 // On player connect
 io.on('connection', function(player) {
 	// When a player is connected
-	player.on('join', function(playerJoined) {
+	player.on('join', function(playerJoined, playerTime) {
 		console.log('Player connected: ' + playerJoined.username);
+		player.lastAlive = playerTime;
+		
+		var lastCycleAlive = 0;
+		var playerIsAlive = setInterval(function() {
+			if (player.lastAlive == lastCycleAlive) {
+				console.log('Disconnected: ' + playerJoined.username);
+				player.broadcast.emit('afk', playerJoined);
+				clearInterval(playerIsAlive);
+			} else {
+				lastCycleAlive = player.lastAlive;
+			}
+		}, 500);
+		
 	});
 	
 	// When a player is moving
@@ -21,8 +34,9 @@ io.on('connection', function(player) {
 	});
 	
 	// When received an alive event (user still online)
-	player.on('alive', function(playerAlive, clientTime) {
+	player.on('alive', function(playerAlive, playerTime) {
 		player.broadcast.emit('move', playerAlive);
+		player.lastAlive = playerTime;
 	});
 });
 
