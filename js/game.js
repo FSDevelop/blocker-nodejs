@@ -23,7 +23,7 @@ function render() {
         canvasContext.drawImage(sprite, pSprite.x, pSprite.y, pSprite.ax, pSprite.ay, player[i].x, player[i].y, 50, 50);
         
         // Draw username
-        canvasContext.font = "12px";
+        canvasContext.font = "13px";
         canvasContext.fillStyle = "#111";
         canvasContext.textAlign = "center";
         canvasContext.fillText(player[i].username, player[i].x + 25, player[i].y + 25);
@@ -46,8 +46,8 @@ window.addEventListener('keydown', function(e) {
 
 function movePlayer(direction) {
     if (!animationOn) {
-        animationOn = true;
-        movedPlayer = player[0];
+        animationOn = true; // Used to stop typing when the movement is on
+        movedPlayer = player[0]; // Player to be moved
         animationMovement = 0;
         animation = setInterval(function() {
             animationMovement++;
@@ -59,12 +59,14 @@ function movePlayer(direction) {
                 case 'down': movedPlayer.y += 5; break;
             }
             
+            // Add an horizontal infinite effect
             if (player[0].x < 0) {
                 player[0].x = 695;
             } else if (player[0].x > 695) {
                 player[0].x = 0;
             }
             
+            // Add an vertical infinite effect
             if (player[0].y < 0) {
                 player[0].y = 695;
             } else if (player[0].y > 695) {
@@ -73,8 +75,11 @@ function movePlayer(direction) {
             
             // Emit a move event to the server
             socket.emit('move', {username: username, x: movedPlayer.x, y: movedPlayer.y, sprite: movedPlayer.sprite});
+            
+            // Write players on new position
             render();
             
+            // When the animation is over, stop interval
             if (animationMovement == 10) {
                 clearInterval(animation);
                 animationOn = false;
