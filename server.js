@@ -23,7 +23,7 @@ io.on('connection', function(player) {
 			} else {
 				lastCycleAlive = player.lastAlive;
 			}
-		}, 500);
+		}, 1000);
 		
 	});
 	

@@ -11,8 +11,8 @@ body {
   display: none;
   border: 1px solid #ccc;
   position: fixed;
-  left: calc(50% - 350px);
-  top: calc(50% - 350px);
+  left: calc(50% - 300px);
+  top: calc(50% - 300px);
   background-color: #ddd;
 }
 #sprites {display:none}
