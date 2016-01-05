@@ -1,0 +1,39 @@
+/**
+ * UI and game styles
+ * @since 1st release
+ */
+
+body {
+  font-family: Verdana;
+  color: #333;
+}
+#game {
+  display: none;
+  border: 1px solid #ccc;
+  position: fixed;
+  left: calc(50% - 350px);
+  top: calc(50% - 350px);
+  background-color: #ddd;
+}
+#sprites {display:none}
+body .username-div {
+  width: 20%;
+  position: fixed;
+  left: calc(40% - 20px);
+  top: calc(50% - 50px);
+}
+body .username-div input {
+  width: 100%;
+  height: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 18px;
+  font-family: Verdana;
+  color: #333;
+}
+body .username-div p {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
