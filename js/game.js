@@ -38,6 +38,18 @@ window.addEventListener('keydown', function(e) {
         case 40: player[0].y += 50; break;
     }
     
+    if (player[0].x < 0) {
+        player[0].x = 650;
+    } else if (player[0].x > 650) {
+        player[0].x = 0;
+    }
+    
+    if (player[0].y < 0) {
+        player[0].y = 650;
+    } else if (player[0].y > 650) {
+        player[0].y = 0;
+    }
+    
     // Emit a move event to the server
     socket.emit('move', {username: username, x: player[0].x, y: player[0].y, sprite: player[0].sprite});
     
