@@ -1,24 +1,38 @@
+// Some importants requires
 var express = require('express');
 var app = express();
+var http = require('http');
 
 // Express server
-var server = require('http').createServer(app);
+var server = http.createServer(app);
 
 // Server socket with Socket.io
-var io = require('socket.io')(server);
+var socket = require('socket.io')(server);
 
-// On player connect
-io.on('connection', function(player) {
-	// When a player is connected
-	player.on('join', function(playerJoined, playerTime) {
+// Players connected (with name, position, etc);
+var players = new Array();
+
+// On player connected
+socket.on('connection', function(player) {
+	
+	// When a player join the game
+	player.on('join', function(playerJoined, timeConnected) {
 		console.log('Player connected: ' + playerJoined.username);
-		player.lastAlive = playerTime;
 		
+		// Add this player to the player's list
+		players.push(player);
+		
+		// Last time this player send a request
+		player.lastAlive = timeConnected;
+		
+		// Checking every second if the player is still connected
 		var lastCycleAlive = 0;
 		var playerIsAlive = setInterval(function() {
 			if (player.lastAlive == lastCycleAlive) {
 				console.log('Disconnected: ' + playerJoined.username);
-				player.broadcast.emit('afk', playerJoined);
+				
+				player.broadcast.emit('dropPlayer', playerJoined);
+				
 				clearInterval(playerIsAlive);
 			} else {
 				lastCycleAlive = player.lastAlive;
@@ -33,10 +47,10 @@ io.on('connection', function(player) {
 		player.broadcast.emit('move', playerMoved);
 	});
 	
-	// When received an alive event (user still online)
-	player.on('alive', function(playerAlive, playerTime) {
+	// When received an alive event (player still online)
+	player.on('alive', function(playerAlive, timeAlive) {
 		player.broadcast.emit('move', playerAlive);
-		player.lastAlive = playerTime;
+		player.lastAlive = timeAlive;
 	});
 });
 
@@ -44,7 +58,7 @@ app.get('/blocker', function(req, res) {
 	res.sendFile(__dirname + '/index.html');
 });
 
-console.log('Waiting for players...');
-
 // Listening to the port 8080 http://localhost:8080/blocker
-server.listen(8080);
+server.listen(8080, function() {
+	console.log('Waiting for players...');
+});
