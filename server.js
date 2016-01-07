@@ -7,6 +7,7 @@ var socket = require('socket.io')(server);
 
 // Players connected (with name, position, sprite, etc);
 var players = new Array();
+var shots = new Array();
 
 // On player connected
 socket.on('connection', function(client) {
@@ -23,7 +24,7 @@ socket.on('connection', function(client) {
 		client.lastAlive = timeConnected;
 		
 		// Emit to all the players that a new player is connected
-		emitPlayers();
+		emitData();
 		
 		// Checking every second if the player is still connected
 		var lastCycleAlive = 0;
@@ -31,6 +32,7 @@ socket.on('connection', function(client) {
 			if (client.lastAlive == lastCycleAlive) {
 				console.log('Disconnected: ' + playerJoined.username);
 				disconnectPlayer();
+				emitData();
 				clearInterval(playerIsAlive);
 			} else {
 				lastCycleAlive = client.lastAlive;
@@ -42,10 +44,9 @@ socket.on('connection', function(client) {
 		for (var i = 0; i < players.length; i++) {
 		    if (players[i].username == client.player.username) {
 		        players.splice(i, 1);
+				client.emit('died');
 		    }
 		}
-		
-		emitPlayers();
 	}
 	
 	// When a player is moving
@@ -62,7 +63,7 @@ socket.on('connection', function(client) {
 	        }
 	    }
 		
-		emitPlayers();
+		emitData();
 	});
 	
 	// When received an alive event (player still online)
@@ -70,27 +71,48 @@ socket.on('connection', function(client) {
 		client.lastAlive = timeAlive;
 	});
 	
-	client.on('attacked', function() {
+	client.on('attacked', function(shot) {
 		for (var i = 0; i < players.length; i++) {
 			if (players[i].username == client.player.username) {
-				players[i].lifes -= 1;
-				client.player.lifes -= 1;
-				if (client.player.lifes <= 0) {
-					disconnectPlayer();
+				if (shot.shoter.username != client.player.username) {
+					console.log('Player attacked');
+					client.player.lifes -= 1;
+					
+					if (client.player.lifes <= 0) {
+						disconnectPlayer();
+					}
+					
+					removeShot(shot);
+					emitData();
+					
+					break;
 				}
+			}
+		}
+	});
+	
+	function removeShot(shot) {
+		for (var i = 0; i < shots.length; i++) {
+			if (shots[i].id == shot.id) {
+				shots[i].draw = false;
 				break;
 			}
 		}
-		
-		emitPlayers();
-	});
+	}
 	
 	// Emit to all the players new players positions
-	function emitPlayers() {
+	function emitData() {
+		var data = { players: players };
 		client.emit('updatePlayer', client.player);
-		client.emit('updatePlayers', players);
-		client.broadcast.emit('updatePlayers', players);
+		client.emit('updateData', data);
+		client.broadcast.emit('updateData', data);
 	}
+	
+	client.on('shot', function(shot) {
+		shots.push(shot);
+		client.emit('newShot', shot);
+		client.broadcast.emit('newShot', shot);
+	});
 });
 
 app.get('/blocker', function(req, res) {

@@ -6,6 +6,7 @@
 
 // Players online (get from server)
 var players = new Array();
+var shots = new Array();
 
 // Define local web browser player
 var player = {
@@ -27,7 +28,10 @@ socket.emit('join', player, +new Date());
 function setCanvas() {
     canvas = document.getElementById("game");
     canvasContext = canvas.getContext("2d");
-    render();
+    
+    setInterval(function() {
+        render();
+    }, 10);
 }
 
 // Remove elements from canvas
@@ -40,7 +44,7 @@ function render() {
     clearCanvas();
     drawPlayers();
     drawShots();
-    drawHearts();
+    //drawHearts();
 }
 
 function drawPlayers() {
@@ -68,8 +72,6 @@ function drawPlayers() {
     }
 }
 
-var shots = new Array();
-
 function drawShots() {
     if (shots.length > 0) {
         for (var i = 0; i < shots.length; i++) {
@@ -84,13 +86,13 @@ function drawShots() {
     }
 }
 
-function manageCollision(shotIndex) {
-    if (shots[shotIndex].draw) {
-        if (shots[shotIndex].position.x >= player.x && shots[shotIndex].position.x <= player.x + 50) {
-            if (shots[shotIndex].position.y >= player.y && shots[shotIndex].position.y <= player.y + 50) {
-                socket.emit('attacked');
-                shots[shotIndex].draw = false;
-            } 
+function manageCollision(i) {
+    if (shots[i].draw) {
+        if (shots[i].shoter.username != player.username) {
+            if (shots[i].position.x >= player.x && shots[i].position.x <= (player.x + 50) &&
+                shots[i].position.y >= player.y && shots[i].position.y <= (player.y + 50)) {
+                socket.emit('attacked', shots[i]);
+            }
         } 
     }
 }
