@@ -10,10 +10,12 @@ setCanvas();
 socket.on('updateData', function(res) {
     players = res.players;
     
+    $('.game-content .players ul').html('');
     for (var i = 0; i < players.length; i++) {
         if (players[i].id == player.id) {
             player = players[i];
         }
+        $('.game-content .players ul').append('<li>' + players[i].username + '</li>');
     }
 });
 
@@ -38,7 +40,7 @@ socket.on('newShot', function(shot) {
         shots[newShotIndex].position.x -= shots[newShotIndex].velocity.x;
         shots[newShotIndex].position.y -= shots[newShotIndex].velocity.y;
                 
-        if (shots[newShotIndex].position.x > 1020 || shots[newShotIndex].position.x < -20 ||
+        if (shots[newShotIndex].position.x > 820 || shots[newShotIndex].position.x < -20 ||
             shots[newShotIndex].position.y > 620 || shots[newShotIndex].position.y < -20) {
             shots[newShotIndex].draw = false;
             clearInterval(shotAnimation[shots[newShotIndex].id]);

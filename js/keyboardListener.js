@@ -32,8 +32,8 @@ function movePlayer(direction) {
             }
             
             // Add an horizontal infinite effect
-            if (player.x < 0) {player.x = 995;}
-            else if (player.x > 995) {player.x = 0;}
+            if (player.x < 0) {player.x = 795;}
+            else if (player.x > 795) {player.x = 0;}
             
             // Add an vertical infinite effect
             if (player.y < 0) {player.y = 595;}

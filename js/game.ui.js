@@ -17,7 +17,7 @@ $(function() {
             if ($(this).val().length <= 6 && $(this).val().length > 1) {
                 
                 $('.username-div').fadeOut(function() {
-                    $('canvas').fadeIn();
+                    $('.game-content').fadeIn();
                 });
                 
                 // Set username and load game

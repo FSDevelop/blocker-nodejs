@@ -12,7 +12,7 @@ var shots = new Array();
 var player = {
     id: +new Date(),
     username: username,
-    x: randomPosition(950), y: randomPosition(550),
+    x: randomPosition(750), y: randomPosition(550),
     sprite: generateRandomSprite(),
     lifes: 3,
     score: 0
