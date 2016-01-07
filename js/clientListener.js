@@ -16,6 +16,6 @@ socket.on('updatePlayers', function(allPlayers) {
 setInterval(function(){
   // Emit an alive event to the server
   if (players.length > 0) {
-      socket.emit('alive', player, +new Date());
+      socket.emit('alive', +new Date());
   }
 }, 100);

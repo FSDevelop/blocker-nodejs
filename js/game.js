@@ -57,7 +57,10 @@ function drawPlayers() {
             canvasContext.fontSize = "14px";
             canvasContext.fillStyle = "#111";
             canvasContext.textAlign = "center";
-            canvasContext.fillText(players[i].username, players[i].x + 25, players[i].y + 25);
+            canvasContext.fillText(
+                players[i].username, 
+                players[i].x + 25, players[i].y + 25
+            );
         }
     }
 }

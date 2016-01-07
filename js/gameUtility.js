@@ -11,5 +11,8 @@ function generateRandomSprite() {
     }
 
     // Return sprite (position on image);
-    return {x: rNum, y: 0, ax: 50, ay: 50};
+    return {
+        x: rNum, y: 0, 
+        ax: 50, ay: 50
+    };
 }

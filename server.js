@@ -30,7 +30,7 @@ socket.on('connection', function(client) {
 		var playerIsAlive = setInterval(function() {
 			if (client.lastAlive == lastCycleAlive) {
 				console.log('Disconnected: ' + playerJoined.username);
-				client.broadcast.emit('dropPlayer', playerJoined);
+				disconnectPlayer(playerJoined);
 				clearInterval(playerIsAlive);
 			} else {
 				lastCycleAlive = client.lastAlive;
@@ -38,10 +38,9 @@ socket.on('connection', function(client) {
 		}, 1000);
 	});
 	
-	// When a player is disconnected
-	client.on('dropPlayer', function(playerDroped) {
+	function disconnectPlayer (playerToDisconnect) {
 		for (var i = 0; i < players.length; i++) {
-		    if (players[i].username == playerDroped.username) {
+		    if (players[i].username == playerToDisconnect.username) {
 		        players.splice(i, 1);
 		    }
 		}
@@ -49,7 +48,7 @@ socket.on('connection', function(client) {
 		// Emit to all the players that a new player is connected
 		client.emit('updatePlayers', players);
 		client.broadcast.emit('updatePlayers', players);
-	});
+	}
 	
 	// When a player is moving
 	client.on('move', function(playerMoved) {
