@@ -2,55 +2,77 @@
 var express = require('express');
 var app = express();
 var http = require('http');
-
-// Express server
 var server = http.createServer(app);
-
-// Server socket with Socket.io
 var socket = require('socket.io')(server);
 
-// Players connected (with name, position, etc);
+// Players connected (with name, position, sprite, etc);
 var players = new Array();
 
 // On player connected
-socket.on('connection', function(player) {
+socket.on('connection', function(client) {
 	
 	// When a player join the game
-	player.on('join', function(playerJoined, timeConnected) {
+	client.on('join', function(playerJoined, timeConnected) {
 		console.log('Player connected: ' + playerJoined.username);
 		
 		// Add this player to the player's list
-		players.push(player);
+		players.push(playerJoined);
 		
 		// Last time this player send a request
-		player.lastAlive = timeConnected;
+		client.lastAlive = timeConnected;
+		
+		// Emit to all the players that a new player is connected
+		client.emit('updatePlayers', players);
+		client.broadcast.emit('updatePlayers', players);
 		
 		// Checking every second if the player is still connected
 		var lastCycleAlive = 0;
 		var playerIsAlive = setInterval(function() {
-			if (player.lastAlive == lastCycleAlive) {
+			if (client.lastAlive == lastCycleAlive) {
 				console.log('Disconnected: ' + playerJoined.username);
-				
-				player.broadcast.emit('dropPlayer', playerJoined);
-				
+				client.broadcast.emit('dropPlayer', playerJoined);
 				clearInterval(playerIsAlive);
 			} else {
-				lastCycleAlive = player.lastAlive;
+				lastCycleAlive = client.lastAlive;
 			}
 		}, 1000);
+	});
+	
+	// When a player is disconnected
+	client.on('dropPlayer', function(playerDroped) {
+		for (var i = 0; i < players.length; i++) {
+		    if (players[i].username == playerDroped.username) {
+		        players.splice(i, 1);
+		    }
+		}
 		
+		// Emit to all the players that a new player is connected
+		client.emit('updatePlayers', players);
+		client.broadcast.emit('updatePlayers', players);
 	});
 	
 	// When a player is moving
-	player.on('move', function(playerMoved) {
-		// Send that move to everyone
-		player.broadcast.emit('move', playerMoved);
+	client.on('move', function(playerMoved) {
+	    // Finding player on array
+	    for (var i = 0; i < players.length; i++) {
+	        if (players[i].username == playerMoved.username) {
+			    // If player already exists update position
+			    players[i].x = playerMoved.x;
+			    players[i].y = playerMoved.y;
+			    players[i].sprite = playerMoved.sprite;
+	            break;
+	        }
+	    }
+			
+		// Emit to all the players new players positions
+		client.emit('updatePlayers', players);
+		client.broadcast.emit('updatePlayers', players);
 	});
 	
 	// When received an alive event (player still online)
-	player.on('alive', function(playerAlive, timeAlive) {
-		player.broadcast.emit('move', playerAlive);
-		player.lastAlive = timeAlive;
+	client.on('alive', function(playerAlive, timeAlive) {
+		client.broadcast.emit('move', playerAlive);
+		client.lastAlive = timeAlive;
 	});
 });
 

@@ -18,35 +18,33 @@ var movingOn = false;
 
 function movePlayer(direction) {
     if (!movingOn) {
-        movingOn = true; // Used to stop typing when the movement is on
-        movedPlayer = players[0]; // Player to be moved
+        movingOn = true;            // Used to stop typing when the movement is on
+        movedPlayer = players[0];   // Player to be moved
         animationMovement = 0;
         animation = setInterval(function() {
             animationMovement++;
             
             switch (direction) {
-                case 'left': movedPlayer.x -= 5; break;
-                case 'right': movedPlayer.x += 5; break;
-                case 'up': movedPlayer.y -= 5; break;
-                case 'down': movedPlayer.y += 5; break;
+                case 'left':    movedPlayer.x -= 5; break;
+                case 'right':   movedPlayer.x += 5; break;
+                case 'up':      movedPlayer.y -= 5; break;
+                case 'down':    movedPlayer.y += 5; break;
             }
             
             // Add an horizontal infinite effect
-            if (players[0].x < 0) {
-                players[0].x = 595;
-            } else if (players[0].x > 595) {
-                players[0].x = 0;
-            }
+            if (players[0].x < 0) players[0].x = 595;
+            else if (players[0].x > 595) players[0].x = 0;
             
             // Add an vertical infinite effect
-            if (players[0].y < 0) {
-                players[0].y = 595;
-            } else if (players[0].y > 595) {
-                players[0].y = 0;
-            }
+            if (players[0].y < 0) players[0].y = 595;
+            else if (players[0].y > 595) players[0].y = 0;
             
             // Emit a move event to the server
-            socket.emit('move', {username: username, x: movedPlayer.x, y: movedPlayer.y, sprite: movedPlayer.sprite});
+            socket.emit('move', {
+                username: username, 
+                x: movedPlayer.x, y: movedPlayer.y, 
+                sprite: movedPlayer.sprite
+            });
             
             // Write players on new position
             render();
@@ -56,6 +54,6 @@ function movePlayer(direction) {
                 clearInterval(animation);
                 movingOn = false;
             }
-        }, 5);
+        }, 10);
     }
 }
