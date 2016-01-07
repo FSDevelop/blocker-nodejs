@@ -32,21 +32,21 @@ function movePlayer(direction) {
             }
             
             // Add an horizontal infinite effect
-            if (player.x < 0) player.x = 995;
-            else if (player.x > 895) player.x = 0;
+            if (player.x < 0) {player.x = 995;}
+            else if (player.x > 995) {player.x = 0;}
             
             // Add an vertical infinite effect
-            if (player.y < 0) player.y = 595;
-            else if (player.y > 895) player.y = 0;
+            if (player.y < 0) {player.y = 595;}
+            else if (player.y > 595) {player.y = 0;}
             
             // Emit a move event to the server
             socket.emit('move', player);
             
             // When the animation is over, stop interval
             if (animationMovement == 10) {
-                clearInterval(animation);
                 movingOn = false;
+                clearInterval(animation);
             }
-        }, 10);
+        }, 5);
     }
 }

@@ -76,10 +76,11 @@ socket.on('connection', function(client) {
 			if (players[i].username == client.player.username) {
 				if (shot.shoter.username != client.player.username) {
 					console.log('Player attacked');
-					client.player.lifes -= 1;
+					client.player.lifes = client.player.lifes - 1;
 					
 					if (client.player.lifes <= 0) {
 						disconnectPlayer();
+						increaseScore(shot.shoter);
 					}
 					
 					removeShot(shot);
@@ -90,6 +91,15 @@ socket.on('connection', function(client) {
 			}
 		}
 	});
+	
+	function increaseScore(shoter) {
+		for (var i = 0; i < players.length; i++) {
+			if (players[i].username == shoter.username) {
+				players[i].score += 1;
+				break;
+			}
+		}
+	}
 	
 	function removeShot(shot) {
 		for (var i = 0; i < shots.length; i++) {
@@ -102,10 +112,9 @@ socket.on('connection', function(client) {
 	
 	// Emit to all the players new players positions
 	function emitData() {
-		var data = { players: players };
 		client.emit('updatePlayer', client.player);
-		client.emit('updateData', data);
-		client.broadcast.emit('updateData', data);
+		client.emit('updateData', { players: players });
+		client.broadcast.emit('updateData', { players: players });
 	}
 	
 	client.on('shot', function(shot) {

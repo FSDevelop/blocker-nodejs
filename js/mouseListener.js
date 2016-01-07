@@ -37,6 +37,6 @@ window.addEventListener('mousedown', function(e) {
         
         setTimeout(function() {
             canShot = true;
-        }, 500);
+        }, 300);
     }
 });

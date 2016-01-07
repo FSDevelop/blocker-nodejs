@@ -13,7 +13,8 @@ var player = {
     username: username,
     x: 0, y: 0,
     sprite: generateRandomSprite(),
-    lifes: 3
+    lifes: 3,
+    score: 0
 };
 
 var sprites = document.getElementById("sprites");
@@ -44,6 +45,7 @@ function render() {
     clearCanvas();
     drawPlayers();
     drawShots();
+    drawScore();
     //drawHearts();
 }
 
@@ -97,6 +99,14 @@ function manageCollision(i) {
     }
 }
 
+function drawScore() {
+    // Draw hearts
+    canvasContext.font = "30px Arial";
+    canvasContext.fillStyle = "#111";
+    canvasContext.textAlign = 'left';
+    canvasContext.fillText('Score: ' + player.score, 10, 30);
+}
+
 function drawHearts() {
     // Draw hearts
     canvasContext.font = "30px Arial";
@@ -106,7 +116,7 @@ function drawHearts() {
     for (var i = 0; i < player.lifes; i++) {
         hearts += '♥ ';
     }
-    canvasContext.fillText(hearts, 520, 30);
+    canvasContext.fillText(hearts, 920, 30);
 }
 
 $.getScript('http://192.168.1.35/blocker/js/clientListener.js');

@@ -9,10 +9,16 @@ setCanvas();
 // Update elements
 socket.on('updateData', function(res) {
     players = res.players;
+    
+    for (var i = 0; i < players.length; i++) {
+        if (players[i].username == player.username) {
+            player = players[i];
+        }
+    }
 });
 
-socket.on('updatePlayer', function(player) {
-    player = player;
+socket.on('updatePlayer', function(playerRefreshed) {
+    player = playerRefreshed;
 });
 
 socket.on('died', function() {
