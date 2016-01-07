@@ -11,6 +11,11 @@ socket.on('updatePlayers', function(allPlayers) {
     players = allPlayers;
     render();
 });
+
+// Update local player
+socket.on('updatePlayer', function(yourPlayer) {
+    player = yourPlayer;
+});
     
 // Every 100 miliseconds send an alive event to the server to avoid disconnection
 setInterval(function(){

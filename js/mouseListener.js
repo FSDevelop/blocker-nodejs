@@ -14,7 +14,7 @@ window.addEventListener('mousedown', function(e) {
     
     var totalVel = Math.abs(xTotalVel) + Math.abs(yTotalVel);
     var totalFPS = 3;
-    
+
     var xVelocity = xTotalVel * totalFPS / totalVel;
     var yVelocity = yTotalVel * totalFPS / totalVel;
     
@@ -23,7 +23,7 @@ window.addEventListener('mousedown', function(e) {
         origin:         {x: player.x + 25, y: player.y + 25},
         position:       {x: player.x + 25, y: player.y + 25},
         velocity:       {x: xVelocity, y: yVelocity},
-        draw:           true
+        draw:           false
     };
     
     // Adding a shoot
@@ -34,16 +34,23 @@ window.addEventListener('mousedown', function(e) {
 function moveShot(shotIndex) {
     shotIndex -= 1;
     
+    var startDrawing = 0;
+    
     var shotAnimation = setInterval(function() {
         shots[shotIndex].position.x -= shots[shotIndex].velocity.x;
         shots[shotIndex].position.y -= shots[shotIndex].velocity.y;
-        
-        render();
-        
-        if (shots[shotIndex].position.x > 700 || shots[shotIndex].position.x < 0 ||
-            shots[shotIndex].position.y > 700 || shots[shotIndex].position.y < 0) {
+            
+        if (startDrawing == 15) {
+            shots[shotIndex].draw = true;
+        } else if (startDrawing >= 15) {
+            render();
+        }
+            
+        if (shots[shotIndex].position.x > 620 || shots[shotIndex].position.x < 0 ||
+            shots[shotIndex].position.y > 620 || shots[shotIndex].position.y < 0) {
                 shots[shotIndex].draw = false;
             clearInterval(shotAnimation);
         }
+        startDrawing++;
     }, 10);
 }

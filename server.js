@@ -14,6 +14,7 @@ socket.on('connection', function(client) {
 	// When a player join the game
 	client.on('join', function(playerJoined, timeConnected) {
 		console.log('Player connected: ' + playerJoined.username);
+		client.player = playerJoined;
 		
 		// Add this player to the player's list
 		players.push(playerJoined);
@@ -22,15 +23,14 @@ socket.on('connection', function(client) {
 		client.lastAlive = timeConnected;
 		
 		// Emit to all the players that a new player is connected
-		client.emit('updatePlayers', players);
-		client.broadcast.emit('updatePlayers', players);
+		emitPlayers();
 		
 		// Checking every second if the player is still connected
 		var lastCycleAlive = 0;
 		var playerIsAlive = setInterval(function() {
 			if (client.lastAlive == lastCycleAlive) {
 				console.log('Disconnected: ' + playerJoined.username);
-				disconnectPlayer(playerJoined);
+				disconnectPlayer();
 				clearInterval(playerIsAlive);
 			} else {
 				lastCycleAlive = client.lastAlive;
@@ -38,16 +38,14 @@ socket.on('connection', function(client) {
 		}, 1000);
 	});
 	
-	function disconnectPlayer (playerToDisconnect) {
+	function disconnectPlayer() {
 		for (var i = 0; i < players.length; i++) {
-		    if (players[i].username == playerToDisconnect.username) {
+		    if (players[i].username == client.player.username) {
 		        players.splice(i, 1);
 		    }
 		}
 		
-		// Emit to all the players that a new player is connected
-		client.emit('updatePlayers', players);
-		client.broadcast.emit('updatePlayers', players);
+		emitPlayers();
 	}
 	
 	// When a player is moving
@@ -59,19 +57,40 @@ socket.on('connection', function(client) {
 			    players[i].x = playerMoved.x;
 			    players[i].y = playerMoved.y;
 			    players[i].sprite = playerMoved.sprite;
+				client.player = playerMoved;
 	            break;
 	        }
 	    }
-			
-		// Emit to all the players new players positions
-		client.emit('updatePlayers', players);
-		client.broadcast.emit('updatePlayers', players);
+		
+		emitPlayers();
 	});
 	
 	// When received an alive event (player still online)
 	client.on('alive', function(timeAlive) {
 		client.lastAlive = timeAlive;
 	});
+	
+	client.on('attacked', function() {
+		for (var i = 0; i < players.length; i++) {
+			if (players[i].username == client.player.username) {
+				players[i].lifes -= 1;
+				client.player.lifes -= 1;
+				if (client.player.lifes <= 0) {
+					disconnectPlayer();
+				}
+				break;
+			}
+		}
+		
+		emitPlayers();
+	});
+	
+	// Emit to all the players new players positions
+	function emitPlayers() {
+		client.emit('updatePlayer', client.player);
+		client.emit('updatePlayers', players);
+		client.broadcast.emit('updatePlayers', players);
+	}
 });
 
 app.get('/blocker', function(req, res) {

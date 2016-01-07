@@ -11,7 +11,8 @@ var players = new Array();
 var player = {
     username: username,
     x: 0, y: 0,
-    sprite: generateRandomSprite()
+    sprite: generateRandomSprite(),
+    lifes: 3
 };
 
 var sprites = document.getElementById("sprites");
@@ -39,6 +40,7 @@ function render() {
     clearCanvas();
     drawPlayers();
     drawShots();
+    drawHearts();
 }
 
 function drawPlayers() {
@@ -76,9 +78,33 @@ function drawShots() {
                 canvasContext.fillStyle = '#ff00ff';
                 canvasContext.arc(shots[i].position.x, shots[i].position.y, 5, 0, Math.PI * 180);
                 canvasContext.fill();
+                manageCollision(i);
             }
         }
     }
+}
+
+function manageCollision(shotIndex) {
+    if (shots[shotIndex].draw) {
+        if (shots[shotIndex].position.x >= player.x && shots[shotIndex].position.x <= player.x + 50) {
+            if (shots[shotIndex].position.y >= player.y && shots[shotIndex].position.y <= player.y + 50) {
+                socket.emit('attacked');
+                shots[shotIndex].draw = false;
+            } 
+        } 
+    }
+}
+
+function drawHearts() {
+    // Draw hearts
+    canvasContext.font = "30px Arial";
+    canvasContext.fillStyle = "#111";
+    canvasContext.textAlign = 'left';
+    var hearts = '';
+    for (var i = 0; i < player.lifes; i++) {
+        hearts += '♥ ';
+    }
+    canvasContext.fillText(hearts, 520, 30);
 }
 
 $.getScript('http://192.168.1.35/blocker/js/clientListener.js');
