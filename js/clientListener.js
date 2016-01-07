@@ -11,7 +11,7 @@ socket.on('updateData', function(res) {
     players = res.players;
     
     for (var i = 0; i < players.length; i++) {
-        if (players[i].username == player.username) {
+        if (players[i].id == player.id) {
             player = players[i];
         }
     }

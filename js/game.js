@@ -10,6 +10,7 @@ var shots = new Array();
 
 // Define local web browser player
 var player = {
+    id: +new Date(),
     username: username,
     x: randomPosition(950), y: randomPosition(550),
     sprite: generateRandomSprite(),
@@ -23,7 +24,7 @@ var canvasContext;  // Canvas context (where things will be rendered)
 var socket = io.connect('http://192.168.1.35:8080'); // Make connection with server
 
 // Tell the server that there is a new player
-socket.emit('join', player, +new Date());
+socket.emit('join', player);
 
 // Initialize the canvas
 function setCanvas() {
@@ -95,13 +96,13 @@ function manageCollisions() {
                 for (var j = 0; j < players.length; j++) {
                     if (shots[i].position.x >= players[j].x && shots[i].position.x <= (players[j].x + 50) &&
                         shots[i].position.y >= players[j].y && shots[i].position.y <= (players[j].y + 50)) {
-                        if (players[j].username == player.username) {
-                            if (shots[i].shoter.username != player.username) {
+                        if (players[j].id == player.id) {
+                            if (shots[i].shoter.id != player.id) {
                                 shots[i].draw = false;
                                 socket.emit('attacked', players[j], shots[i].shoter);
                             }
                         } else {
-                            if (shots[i].shoter.username != players[j].username) {
+                            if (shots[i].shoter.id != players[j].id) {
                                 shots[i].draw = false;
                             }
                         }

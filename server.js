@@ -13,7 +13,7 @@ var shots = new Array();
 socket.on('connection', function(client) {
 	
 	// When a player join the game
-	client.on('join', function(playerJoined, timeConnected) {
+	client.on('join', function(playerJoined) {
 		console.log('Player connected: ' + playerJoined.username);
 		client.player = playerJoined;
 		
@@ -21,7 +21,7 @@ socket.on('connection', function(client) {
 		players.push(playerJoined);
 		
 		// Last time this player send a request
-		client.lastAlive = timeConnected;
+		client.lastAlive = playerJoined.id;
 		
 		// Emit to all the players that a new player is connected
 		emitData();
@@ -42,7 +42,7 @@ socket.on('connection', function(client) {
 	
 	function disconnectPlayer() {
 		for (var i = 0; i < players.length; i++) {
-		    if (players[i].username == client.player.username) {
+		    if (players[i].id == client.player.id) {
 		        players.splice(i, 1);
 				client.emit('died');
 		    }
@@ -53,7 +53,7 @@ socket.on('connection', function(client) {
 	client.on('move', function(playerMoved) {
 	    // Finding player on array
 	    for (var i = 0; i < players.length; i++) {
-	        if (players[i].username == playerMoved.username) {
+	        if (players[i].id == playerMoved.id) {
 			    // If player already exists update position
 			    players[i].x = playerMoved.x;
 			    players[i].y = playerMoved.y;
@@ -73,7 +73,7 @@ socket.on('connection', function(client) {
 	
 	client.on('attacked', function(attackedPlayer, shoterPlayer) {
 		for (var i = 0; i < players.length; i++) {
-			if (players[i].username === attackedPlayer.username) {
+			if (players[i].id === attackedPlayer.id) {
 				console.log('Player attacked');
 				players[i].lifes -= 1;
 				
@@ -81,7 +81,7 @@ socket.on('connection', function(client) {
 					players.splice(i, 1);
 					client.emit('died');
 				}
-			} else if (players[i].username === shoterPlayer.username) {
+			} else if (players[i].id === shoterPlayer.id) {
 				players[i].score += 1;
 			}
 		}
