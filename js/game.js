@@ -11,7 +11,7 @@ var shots = new Array();
 // Define local web browser player
 var player = {
     username: username,
-    x: 0, y: 0,
+    x: randomPosition(950), y: randomPosition(550),
     sprite: generateRandomSprite(),
     lifes: 3,
     score: 0
@@ -32,7 +32,7 @@ function setCanvas() {
     
     setInterval(function() {
         render();
-    }, 10);
+    }, 20);
 }
 
 // Remove elements from canvas
@@ -45,8 +45,9 @@ function render() {
     clearCanvas();
     drawPlayers();
     drawShots();
+    manageCollisions();
     drawScore();
-    //drawHearts();
+    drawHearts();
 }
 
 function drawPlayers() {
@@ -63,12 +64,12 @@ function drawPlayers() {
             );
             
             // Draw username
-            canvasContext.fontSize = "14px";
-            canvasContext.fillStyle = "#111";
+            canvasContext.font = "15px Arial";
+            canvasContext.fillStyle = "#000";
             canvasContext.textAlign = "center";
             canvasContext.fillText(
                 players[i].username, 
-                players[i].x + 25, players[i].y + 25
+                players[i].x + 25, players[i].y + 28
             );
         }
     }
@@ -82,27 +83,39 @@ function drawShots() {
                 canvasContext.fillStyle = '#ff00ff';
                 canvasContext.arc(shots[i].position.x, shots[i].position.y, 5, 0, Math.PI * 180);
                 canvasContext.fill();
-                manageCollision(i);
             }
         }
     }
 }
 
-function manageCollision(i) {
-    if (shots[i].draw) {
-        if (shots[i].shoter.username != player.username) {
-            if (shots[i].position.x >= player.x && shots[i].position.x <= (player.x + 50) &&
-                shots[i].position.y >= player.y && shots[i].position.y <= (player.y + 50)) {
-                socket.emit('attacked', shots[i]);
+function manageCollisions() {
+    if (shots.length > 0) {
+        for (var i = 0; i < shots.length; i++) {
+            if (shots[i].draw) {
+                for (var j = 0; j < players.length; j++) {
+                    if (shots[i].position.x >= players[j].x && shots[i].position.x <= (players[j].x + 50) &&
+                        shots[i].position.y >= players[j].y && shots[i].position.y <= (players[j].y + 50)) {
+                        if (players[j].username == player.username) {
+                            if (shots[i].shoter.username != player.username) {
+                                shots[i].draw = false;
+                                socket.emit('attacked', players[j], shots[i].shoter);
+                            }
+                        } else {
+                            if (shots[i].shoter.username != players[j].username) {
+                                shots[i].draw = false;
+                            }
+                        }
+                    }
+                }
             }
-        } 
+        }
     }
 }
 
 function drawScore() {
     // Draw hearts
     canvasContext.font = "30px Arial";
-    canvasContext.fillStyle = "#111";
+    canvasContext.fillStyle = "#fff";
     canvasContext.textAlign = 'left';
     canvasContext.fillText('Score: ' + player.score, 10, 30);
 }

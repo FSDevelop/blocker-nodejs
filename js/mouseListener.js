@@ -30,7 +30,6 @@ window.addEventListener('mousedown', function(e) {
             draw:           true
         };
         
-        // Adding a shoot
         socket.emit('shot', shot);
         
         canShot = false;

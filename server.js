@@ -71,44 +71,23 @@ socket.on('connection', function(client) {
 		client.lastAlive = timeAlive;
 	});
 	
-	client.on('attacked', function(shot) {
+	client.on('attacked', function(attackedPlayer, shoterPlayer) {
 		for (var i = 0; i < players.length; i++) {
-			if (players[i].username == client.player.username) {
-				if (shot.shoter.username != client.player.username) {
-					console.log('Player attacked');
-					client.player.lifes = client.player.lifes - 1;
-					
-					if (client.player.lifes <= 0) {
-						disconnectPlayer();
-						increaseScore(shot.shoter);
-					}
-					
-					removeShot(shot);
-					emitData();
-					
-					break;
+			if (players[i].username === attackedPlayer.username) {
+				console.log('Player attacked');
+				players[i].lifes -= 1;
+				
+				if (players[i].lifes <= 0) {
+					players.splice(i, 1);
+					client.emit('died');
 				}
-			}
-		}
-	});
-	
-	function increaseScore(shoter) {
-		for (var i = 0; i < players.length; i++) {
-			if (players[i].username == shoter.username) {
+			} else if (players[i].username === shoterPlayer.username) {
 				players[i].score += 1;
-				break;
 			}
 		}
-	}
-	
-	function removeShot(shot) {
-		for (var i = 0; i < shots.length; i++) {
-			if (shots[i].id == shot.id) {
-				shots[i].draw = false;
-				break;
-			}
-		}
-	}
+		
+		emitData();
+	});
 	
 	// Emit to all the players new players positions
 	function emitData() {

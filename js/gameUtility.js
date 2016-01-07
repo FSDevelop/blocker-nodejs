@@ -16,3 +16,13 @@ function generateRandomSprite() {
         ax: 50, ay: 50
     };
 }
+
+function randomPosition(max) {
+    random = -1;
+    
+    while (random % 50 != 0) {
+      random = Math.floor((Math.random() * max) + 0);
+    }
+    
+    return random;
+}

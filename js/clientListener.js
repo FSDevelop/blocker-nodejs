@@ -22,7 +22,9 @@ socket.on('updatePlayer', function(playerRefreshed) {
 });
 
 socket.on('died', function() {
-    $('#game').fadeOut()
+    $('#game').fadeOut(function() {
+        window.location = window.location;
+    })
 });
 
 var shotAnimation = new Array();
