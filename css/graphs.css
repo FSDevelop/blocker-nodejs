@@ -34,6 +34,7 @@ body {
 #game {
     border: 1px solid #ccc;
     background-color: #eee;
+    position: fixed;
 }
 #sprites {display:none}
 body .username-div {

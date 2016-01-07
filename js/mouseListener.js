@@ -12,8 +12,8 @@ window.addEventListener('mousedown', function(e) {
         var destX = e.x - canvas.offsetLeft;
         var destY = e.y - canvas.offsetTop;
         
-        var xTotalVel = player.x - destX;
-        var yTotalVel = player.y - destY;
+        var xTotalVel = (player.x + 25) - destX;
+        var yTotalVel = (player.y + 25) - destY;
         
         var totalVel = Math.abs(xTotalVel) + Math.abs(yTotalVel);
         var totalFPS = 6;

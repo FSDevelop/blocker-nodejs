@@ -130,7 +130,7 @@ function drawHearts() {
     for (var i = 0; i < player.lifes; i++) {
         hearts += '♥ ';
     }
-    canvasContext.fillText(hearts, 920, 30);
+    canvasContext.fillText(hearts, 720, 30);
 }
 
 $.getScript('http://192.168.1.35/blocker/js/clientListener.js');

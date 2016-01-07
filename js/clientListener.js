@@ -9,15 +9,25 @@ setCanvas();
 // Update elements
 socket.on('updateData', function(res) {
     players = res.players;
-    
+    playersSorted = players.sortBy('score');
     $('.game-content .players ul').html('');
     for (var i = 0; i < players.length; i++) {
         if (players[i].id == player.id) {
             player = players[i];
         }
-        $('.game-content .players ul').append('<li>' + players[i].username + '</li>');
+    }
+    for (var i = 0; i < playersSorted.length; i++) {
+        $('.game-content .players ul').append(
+            '<li>' + playersSorted[i].username + ' ( ' + playersSorted[i].score + ' )</li>'
+        );
     }
 });
+
+Array.prototype.sortBy = function(p) {
+  return this.slice(0).sort(function(a,b) {
+    return (a[p] > b[p]) ? 0 : (a[p] < b[p]) ? -1 : 1;
+  });
+}
 
 socket.on('updatePlayer', function(playerRefreshed) {
     player = playerRefreshed;

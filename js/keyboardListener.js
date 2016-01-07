@@ -7,10 +7,10 @@
 // Keyboard listener
 window.addEventListener('keydown', function(e) {
     switch (e.keyCode) {
-        case 37: movePlayer('left');    break;
-        case 38: movePlayer('up');      break;
-        case 39: movePlayer('right');   break;
-        case 40: movePlayer('down');    break;
+        case 65: movePlayer('left');    break;
+        case 87: movePlayer('up');      break;
+        case 68: movePlayer('right');   break;
+        case 83: movePlayer('down');    break;
     }
 });
 
