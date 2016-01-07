@@ -38,6 +38,7 @@ function clearCanvas() {
 function render() {
     clearCanvas();
     drawPlayers();
+    drawShots();
 }
 
 function drawPlayers() {
@@ -65,20 +66,20 @@ function drawPlayers() {
     }
 }
 
-/* TODO: Not used for now
-var shoot = new Array();
+var shots = new Array();
 
 function drawShots() {
-    if (shoot.length > 0) {
-        for (var i = 0; i < shoot.length; i++) {
-            canvasContext.fillStyle = "#000";
-            canvasContext.arc(shoot.position.x, shoot.position.y, 10, 0, Math.PI * 180, false);
-            shoot.position.x += 2;
-            shoot.position.y += 4;
+    if (shots.length > 0) {
+        for (var i = 0; i < shots.length; i++) {
+            if (shots[i].draw) {
+                canvasContext.beginPath();
+                canvasContext.fillStyle = '#ff00ff';
+                canvasContext.arc(shots[i].position.x, shots[i].position.y, 5, 0, Math.PI * 180);
+                canvasContext.fill();
+            }
         }
     }
 }
-*/
 
 $.getScript('http://192.168.1.35/blocker/js/clientListener.js');
 $.getScript('http://192.168.1.35/blocker/js/keyboardListener.js');
