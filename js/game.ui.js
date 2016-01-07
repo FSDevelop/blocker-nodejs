@@ -1,5 +1,5 @@
 /**
- * UI functionality
+ * UI functionality (first script to run)
  * @since 1st release
  */
 
@@ -22,6 +22,8 @@ $(function() {
                 
                 // Set username and load game
                 username = $(this).val();
+                
+                // Start the game
                 $.getScript('http://192.168.1.35/blocker/js/gameUtility.js');
                 $.getScript('http://192.168.1.35/blocker/js/game.js');
                 
