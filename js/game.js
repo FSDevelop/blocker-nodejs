@@ -21,7 +21,7 @@ var player = {
 var sprites = document.getElementById("sprites");
 var canvas;         // Canvas element
 var canvasContext;  // Canvas context (where things will be rendered)
-var socket = io.connect('http://192.168.1.35:8080'); // Make connection with server
+var socket = io.connect('http://' + host + ':8080'); // Make connection with server
 
 // Tell the server that there is a new player
 socket.emit('join', player);
@@ -133,6 +133,6 @@ function drawHearts() {
     canvasContext.fillText(hearts, 720, 30);
 }
 
-$.getScript('http://192.168.1.35/blocker/js/clientListener.js');
-$.getScript('http://192.168.1.35/blocker/js/keyboardListener.js');
-$.getScript('http://192.168.1.35/blocker/js/mouseListener.js');
+$.getScript('http://' + host + '/blocker/js/clientListener.js');
+$.getScript('http://' + host + '/blocker/js/keyboardListener.js');
+$.getScript('http://' + host + '/blocker/js/mouseListener.js');
