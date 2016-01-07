@@ -70,8 +70,7 @@ socket.on('connection', function(client) {
 	});
 	
 	// When received an alive event (player still online)
-	client.on('alive', function(playerAlive, timeAlive) {
-		client.broadcast.emit('move', playerAlive);
+	client.on('alive', function(timeAlive) {
 		client.lastAlive = timeAlive;
 	});
 });

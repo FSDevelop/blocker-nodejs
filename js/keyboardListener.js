@@ -19,32 +19,28 @@ var movingOn = false;
 function movePlayer(direction) {
     if (!movingOn) {
         movingOn = true;            // Used to stop typing when the movement is on
-        movedPlayer = players[0];   // Player to be moved
         animationMovement = 0;
+        
         animation = setInterval(function() {
-            animationMovement++;
+            animationMovement++; // Has to reach 10
             
             switch (direction) {
-                case 'left':    movedPlayer.x -= 5; break;
-                case 'right':   movedPlayer.x += 5; break;
-                case 'up':      movedPlayer.y -= 5; break;
-                case 'down':    movedPlayer.y += 5; break;
+                case 'left':    player.x -= 5; break;
+                case 'right':   player.x += 5; break;
+                case 'up':      player.y -= 5; break;
+                case 'down':    player.y += 5; break;
             }
             
             // Add an horizontal infinite effect
-            if (players[0].x < 0) players[0].x = 595;
-            else if (players[0].x > 595) players[0].x = 0;
+            if (player.x < 0) player.x = 595;
+            else if (player.x > 595) player.x = 0;
             
             // Add an vertical infinite effect
-            if (players[0].y < 0) players[0].y = 595;
-            else if (players[0].y > 595) players[0].y = 0;
+            if (player.y < 0) players[0].y = 595;
+            else if (player.y > 595) player.y = 0;
             
             // Emit a move event to the server
-            socket.emit('move', {
-                username: username, 
-                x: movedPlayer.x, y: movedPlayer.y, 
-                sprite: movedPlayer.sprite
-            });
+            socket.emit('move', player);
             
             // Write players on new position
             render();

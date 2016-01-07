@@ -22,6 +22,7 @@ $(function() {
                 
                 // Set username and load game
                 username = $(this).val();
+                $.getScript('http://192.168.1.35/blocker/js/gameUtility.js');
                 $.getScript('http://192.168.1.35/blocker/js/game.js');
                 
             } else {

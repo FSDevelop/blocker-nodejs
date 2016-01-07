@@ -4,33 +4,23 @@
  * @since   January, 2015
  */
 
-function generateRandomSprite() {
-    rNum = -1;
-    while (rNum != 0 && rNum != 50 && rNum != 100 && rNum != 150) {
-      rNum = Math.floor((Math.random() * 150) + 0);
-    }
-
-    // Return sprite (position on image);
-    return {
-        x: rNum, y: 0, 
-        ax: 50, ay: 50
-    };
-}
- 
+// Players online (get from server)
 var players = new Array();
+
+// Define local web browser player
+var player = {
+    username: username,
+    x: 0, y: 0,
+    sprite: generateRandomSprite()
+};
+
 var sprites = document.getElementById("sprites");
 var canvas;         // Canvas element
 var canvasContext;  // Canvas context (where things will be rendered)
-
-// Make connection with server
-var socket = io.connect('http://192.168.1.35:8080');
+var socket = io.connect('http://192.168.1.35:8080'); // Make connection with server
 
 // Tell the server that there is a new player
-socket.emit('join', {
-    username: username,             // Username
-    x: 0, y: 0,                     // Position
-    sprite: generateRandomSprite()  // Sprite
-}, +new Date());
+socket.emit('join', player, +new Date());
 
 // Initialize the canvas
 function setCanvas() {
