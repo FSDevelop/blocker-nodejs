@@ -33,7 +33,6 @@ socket.on('connection', function(client) {
 			client.emit('walls', data);
 		});
 		
-		
 		// Checking every second if the player is still connected
 		var lastCycleAlive = 0;
 		var playerIsAlive = setInterval(function() {
@@ -45,17 +44,7 @@ socket.on('connection', function(client) {
 			} else {
 				lastCycleAlive = client.lastAlive;
 			}
-		}, 1000);
-	});
-	
-	socket.on('updatePlayer', function(playerUpdated) {
-		for (var i = 0; i < players.length; i++) {
-		    if (players[i].id == playerUpdated.id) {
-				players[i] = playerUpdated;
-		    }
-		}
-		// Emit to all the players that a new player is connected
-		emitData();
+		}, 5000);
 	});
 	
 	function disconnectPlayer() {
@@ -69,14 +58,33 @@ socket.on('connection', function(client) {
 	
 	// When a player is moving
 	client.on('move', function(playerMoved, direction) {
-		client.emit('playerMovement', {
-			playerMoved: playerMoved,
-			direction: direction
-		});
-		client.broadcast.emit('playerMovement', {
-			playerMoved: playerMoved,
-			direction: direction
-		});
+		var data = {playerMoved: playerMoved.id, direction: direction};
+		
+		client.emit('playerMovement', data);
+		client.broadcast.emit('playerMovement', data);
+		
+		setTimeout(function(){
+			
+			// Find player on list
+			for (var i = 0; i < players.length; i++) {
+				if (players[i].id == playerMoved.id) {
+					playerMoved = players[i];
+				}
+			}
+			
+			// Update it's position
+			switch (direction) {
+				case 'left': 	playerMoved.x -= 50; break;
+				case 'right': 	playerMoved.x += 50; break;
+				case 'up': 		playerMoved.y -= 50; break;
+				case 'down': 	playerMoved.y += 50; break;
+			}
+			
+			var data = {id: playerMoved.id, x: playerMoved.x, y: playerMoved.y };
+			client.emit('playerNewPosition', data);
+			client.broadcast.emit('playerNewPosition', data);
+			
+		}, 250);
 	});
 	
 	// When received an alive event (player still online)
@@ -104,7 +112,6 @@ socket.on('connection', function(client) {
 	
 	// Emit to all the players new players positions
 	function emitData() {
-		client.emit('updatePlayer', client.player);
 		client.emit('updateData', { players: players });
 		client.broadcast.emit('updateData', { players: players });
 	}
@@ -121,6 +128,6 @@ app.get('/blocker', function(req, res) {
 });
 
 // Listening to the port 8080 http://localhost:8080/blocker
-server.listen(8081, function() {
+server.listen(8080, function() {
 	console.log('Waiting for players...');
 });

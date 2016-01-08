@@ -23,6 +23,15 @@ socket.on('updateData', function(res) {
     }
 });
 
+socket.on('playerNewPosition', function(playerNewPosition) {
+    for (var i = 0; i < players.length; i++) {
+        if (players[i].id == playerNewPosition.id) {
+            players[i].x = playerNewPosition.x;
+            players[i].y = playerNewPosition.y;
+        }
+    }
+});
+
 socket.on('walls', function(allWalls) {
     walls = allWalls;
 });
@@ -33,12 +42,8 @@ Array.prototype.sortBy = function(p) {
   });
 }
 
-socket.on('updatePlayer', function(playerRefreshed) {
-    player = playerRefreshed;
-});
-
 socket.on('died', function() {
-    $('#game').fadeOut(function() {
+    $('.game-content').fadeOut(function() {
         window.location = window.location;
     })
 });
@@ -50,7 +55,7 @@ socket.on('newShot', function(shot) {
     
     var newShotIndex = shots.push(shot) - 1;
     
-    shotAnimation[shots[newShotIndex].id] = setInterval(function() {
+    shotAnimation[newShotIndex] = setInterval(function() {
         while (startDrawing < 5) {
             shots[newShotIndex].position.x -= shots[newShotIndex].velocity.x;
             shots[newShotIndex].position.y -= shots[newShotIndex].velocity.y;
@@ -89,7 +94,7 @@ socket.on('newShot', function(shot) {
         
         if (removeShot) {
             shots[newShotIndex].draw = false;
-            clearInterval(shotAnimation[shots[newShotIndex].id]);
+            clearInterval(shotAnimation[newShotIndex]);
         }
             
         startDrawing++;
@@ -135,7 +140,7 @@ socket.on('playerMovement', function(data) {
     var playerMoved = data.playerMoved;
     
     for (var i = 0; i < players.length; i++) {
-        if (players[i].id == playerMoved.id) {
+        if (players[i].id == playerMoved) {
             playerMoved = players[i];
         }
     }
@@ -176,7 +181,7 @@ socket.on('playerMovement', function(data) {
             }
                         
             // When the animation is over, stop interval
-            if (animationMovement[thisAnimation] >= 25 || horizontalEffect) {
+            if (animationMovement[thisAnimation] == 25 || horizontalEffect) {
                 movingOn = (playerMoved.id == player.id) ? false : movingOn;
                 clearInterval(animation[thisAnimation]);
             }
@@ -190,4 +195,4 @@ setInterval(function(){
   if (players.length > 0) {
       socket.emit('alive', +new Date());
   }
-}, 100);
+}, 1000);
