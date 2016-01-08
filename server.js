@@ -1,19 +1,51 @@
 // Some importants requires
 var express = require('express');
 var app = express();
-var http = require('http');
-var server = http.createServer(app);
-var socket = require('socket.io')(server);
-var fs = require('fs');
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 
-// Players connected (with name, position, sprite, etc);
+// All players
 var players = new Array();
-var shots = new Array();
-var walls;
 
 // On player connected
-socket.on('connection', function(client) {
+io.on('connection', function(client) {
+	client.on('join', function(player) {
+		console.log('Player connected: ' + player.username);
+		
+		// Set client player to the recent joined
+		client.player = player;
+		
+		// First time connected
+		client.lastConnection = player.id;
+		
+		// Add new player to the list
+		players.push(player);
+		
+		// Tell the new client who is connected
+		client.emit('playersConnected', players);
+		
+		// Tell everyone there is a new player
+		client.broadcast.emit('newPlayer', player);
+		
+		// Disconnect player when no data emision
+		manageDisconnection();
+	});
 	
+	client.on('stillAlive', function(time) {
+		client.lastConnection = time;
+	});
+	
+	function manageDisconnection() {
+		var lastConnection = 0;
+		connection = setInterval(function() {
+			if (client.lastConnection == lastConnection) {
+				console.log('Player disconnected: ' + client.player.username);
+				client.broadcast.emit('playerDisconnected', client.player.id);
+				clearInterval(connection);
+			}
+			lastConnection = client.lastConnection;
+		}, 5000);
+	}
 });
 
 app.get('/blocker', function(req, res) {

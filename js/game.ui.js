@@ -4,7 +4,7 @@
  */
 
 var username;
-var host = 'http://192.168.1.35/';
+var host = 'http://192.168.1.35';
 
 $(function() {
     // Focus the input
@@ -26,8 +26,8 @@ $(function() {
                 
                 // Start the game
                 setTimeout(function() {
-                    $.getScript(host + 'blocker/js/gameUtility.js');
-                    $.getScript(host + 'blocker/js/game.js');
+                    $.getScript(host + '/blocker/js/gameUtility.js');
+                    $.getScript(host + '/blocker/js/game.js');
                 }, 500);
                 
             } else {

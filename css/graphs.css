@@ -20,7 +20,7 @@ body {
     background-color: #CCCCCC;
     position: fixed;
     left: calc(50% - 400px);
-    top: calc(50% - 300px);
+    top: calc(50% - 250px);
     display: none
 }
 body .username-div {
