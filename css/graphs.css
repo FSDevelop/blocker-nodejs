@@ -12,14 +12,21 @@ body {
     position: fixed;
     left: calc(50% - 500px);
     top: calc(50% - 300px);
+    font-family: Arial;
 }
 .game-content .players {
     float: left;
     width: 200px;
 }
-.game-content .players p {
+.game-content .players p:first-child {
     font-weight: bold;
     margin-top: 10px;
+}
+.game-content .players p:not(:first-child) {
+    margin-bottom: 5px;
+}
+.game-content .players p:not(:first-child) strong {
+    font-weight: bold;
 }
 .game-content .players ul {
     margin-top: 20px;

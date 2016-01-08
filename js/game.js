@@ -10,12 +10,14 @@ var shots = new Array();
 
 // Define local web browser player
 var player = {
-    id: +new Date(),
-    username: username,
-    x: randomPosition(750), y: randomPosition(550),
-    sprite: generateRandomSprite(),
-    lifes: 3,
-    score: 0
+    id:         +new Date(),
+    username:   username,
+    x:          randomPosition(750), 
+    y:          randomPosition(550),
+    sprite:     generateRandomSprite(),
+    lifes:      3,
+    score:      0,
+    shotColor:  '#'+Math.floor(Math.random()*16777215).toString(16)
 };
 
 var sprites = document.getElementById("sprites");
@@ -70,7 +72,7 @@ function drawPlayers() {
             canvasContext.textAlign = "center";
             canvasContext.fillText(
                 players[i].username, 
-                players[i].x + 25, players[i].y + 28
+                players[i].x + 25, players[i].y - 5
             );
         }
     }
@@ -81,7 +83,7 @@ function drawShots() {
         for (var i = 0; i < shots.length; i++) {
             if (shots[i].draw) {
                 canvasContext.beginPath();
-                canvasContext.fillStyle = '#ff00ff';
+                canvasContext.fillStyle = shots[i].color;
                 canvasContext.arc(shots[i].position.x, shots[i].position.y, 5, 0, Math.PI * 180);
                 canvasContext.fill();
             }
@@ -116,7 +118,7 @@ function manageCollisions() {
 function drawScore() {
     // Draw hearts
     canvasContext.font = "30px Arial";
-    canvasContext.fillStyle = "#fff";
+    canvasContext.fillStyle = "#333";
     canvasContext.textAlign = 'left';
     canvasContext.fillText('Score: ' + player.score, 10, 30);
 }

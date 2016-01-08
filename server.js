@@ -50,8 +50,9 @@ socket.on('connection', function(client) {
 	}
 	
 	// When a player is moving
-	client.on('move', function(playerMoved) {
+	client.on('move', function(playerMoved, direction) {
 	    // Finding player on array
+		/*
 	    for (var i = 0; i < players.length; i++) {
 	        if (players[i].id == playerMoved.id) {
 			    // If player already exists update position
@@ -64,6 +65,16 @@ socket.on('connection', function(client) {
 	    }
 		
 		emitData();
+		*/
+		//console.log('Player moved');
+		client.emit('playerMovement', {
+			playerMoved: playerMoved,
+			direction: direction
+		});
+		client.broadcast.emit('playerMovement', {
+			playerMoved: playerMoved,
+			direction: direction
+		});
 	});
 	
 	// When received an alive event (player still online)

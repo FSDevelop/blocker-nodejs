@@ -6,47 +6,16 @@
 
 // Keyboard listener
 window.addEventListener('keydown', function(e) {
+    var allowedKey = true;
     switch (e.keyCode) {
-        case 65: movePlayer('left');    break;
-        case 87: movePlayer('up');      break;
-        case 68: movePlayer('right');   break;
-        case 83: movePlayer('down');    break;
+        case 65: direction = 'left';    break;
+        case 87: direction = 'up';      break;
+        case 68: direction = 'right';   break;
+        case 83: direction = 'down';    break;
+        default: allowedKey = false;
+    }
+    
+    if (allowedKey) {
+        socket.emit('move', player, direction);
     }
 });
-
-var movingOn = false;
-
-function movePlayer(direction) {
-    if (!movingOn) {
-        movingOn = true;            // Used to stop typing when the movement is on
-        animationMovement = 0;
-        
-        animation = setInterval(function() {
-            animationMovement++; // Has to reach 10
-            
-            switch (direction) {
-                case 'left':    player.x -= 5; break;
-                case 'right':   player.x += 5; break;
-                case 'up':      player.y -= 5; break;
-                case 'down':    player.y += 5; break;
-            }
-            
-            // Add an horizontal infinite effect
-            if (player.x < 0) {player.x = 795;}
-            else if (player.x > 795) {player.x = 0;}
-            
-            // Add an vertical infinite effect
-            if (player.y < 0) {player.y = 595;}
-            else if (player.y > 595) {player.y = 0;}
-            
-            // Emit a move event to the server
-            socket.emit('move', player);
-            
-            // When the animation is over, stop interval
-            if (animationMovement == 10) {
-                movingOn = false;
-                clearInterval(animation);
-            }
-        }, 5);
-    }
-}
