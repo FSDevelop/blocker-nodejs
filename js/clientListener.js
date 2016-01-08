@@ -73,6 +73,20 @@ socket.on('newShot', function(shot) {
             removeShot = true;
         }
         
+        // Add an horizontal infinite effect
+        if (shots[newShotIndex].position.x - shots[newShotIndex].velocity.x <= 0) {
+            shots[newShotIndex].position.x = 800;
+        } else if (shots[newShotIndex].position.x - shots[newShotIndex].velocity.x >= 800) {
+            shots[newShotIndex].position.x = 0;
+        }
+                    
+        // Add an vertical infinite effect
+        if (shots[newShotIndex].position.y - shots[newShotIndex].velocity.y <= 0) {
+            shots[newShotIndex].position.y = 600;
+        } else if (shots[newShotIndex].position.y - shots[newShotIndex].velocity.y >= 600) {
+            shots[newShotIndex].position.y = 0;
+        }
+        
         if (removeShot) {
             shots[newShotIndex].draw = false;
             clearInterval(shotAnimation[shots[newShotIndex].id]);
