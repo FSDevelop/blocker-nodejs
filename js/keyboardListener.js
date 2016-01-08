@@ -16,6 +16,51 @@ window.addEventListener('keydown', function(e) {
     }
     
     if (allowedKey) {
-        socket.emit('move', player, direction);
+        
+        if (!playerWallCollision(player, direction)) {
+            socket.emit('move', player, direction);
+        }
     }
 });
+
+// Player collision with wall
+function playerWallCollision(playerMoved, direction) {
+    var pushedWall = false;
+    // Wall limitation
+    if (walls !== undefined) {
+        var rows = walls.split('\n');
+        for (var i = 0; i < rows.length; i++) {
+            var cols = rows[i].split('');
+            for (var j = 0; j < cols.length; j++) {
+                var field = cols[j];
+                if (field == '1') {
+                    var xWall = j * 50;
+                    var yWall = i * 50;
+                    if (direction == 'left') {
+                        if ((playerMoved.x - 25) >= xWall && (playerMoved.x - 25) <= (xWall + 50) &&
+                            (playerMoved.y + 25) >= yWall && (playerMoved.y + 25) <= (yWall + 50)) {
+                            pushedWall = true;
+                        }
+                    } else if (direction == 'right') {
+                        if ((playerMoved.x + 75) >= xWall && (playerMoved.x + 75) <= (xWall + 50) &&
+                            (playerMoved.y + 25) >= yWall && (playerMoved.y + 25) <= (yWall + 50)) {
+                            pushedWall = true;
+                        }
+                    } else if (direction == 'up') {
+                        if ((playerMoved.x + 25) >= xWall && (playerMoved.x + 25) <= (xWall + 50) &&
+                            (playerMoved.y - 25) >= yWall && (playerMoved.y - 25) <= (yWall + 50)) {
+                            pushedWall = true;
+                        }
+                    } else if (direction == 'down') {
+                        if ((playerMoved.x + 25) >= xWall && (playerMoved.x + 25) <= (xWall + 50) &&
+                            (playerMoved.y + 75) >= yWall && (playerMoved.y + 75) <= (yWall + 50)) {
+                            pushedWall = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return pushedWall;
+}

@@ -23,6 +23,10 @@ socket.on('updateData', function(res) {
     }
 });
 
+socket.on('walls', function(allWalls) {
+    walls = allWalls;
+});
+
 Array.prototype.sortBy = function(p) {
   return this.slice(0).sort(function(a,b) {
     return (a[p] > b[p]) ? 0 : (a[p] < b[p]) ? -1 : 1;
@@ -57,18 +61,57 @@ socket.on('newShot', function(shot) {
         
         shots[newShotIndex].position.x -= shots[newShotIndex].velocity.x;
         shots[newShotIndex].position.y -= shots[newShotIndex].velocity.y;
+        
+        var removeShot = false;
                 
         if (shots[newShotIndex].position.x > 820 || shots[newShotIndex].position.x < -20 ||
             shots[newShotIndex].position.y > 620 || shots[newShotIndex].position.y < -20) {
-            shots[newShotIndex].draw = false;
-            clearInterval(shotAnimation[shots[newShotIndex].id]);
+            removeShot = true;
         } else if (shots[newShotIndex].velocity.x == 0 && shots[newShotIndex].velocity.y == 0) {
+            removeShot = true;
+        } else if (shotWallCollision(shots[newShotIndex])) {
+            removeShot = true;
+        }
+        
+        if (removeShot) {
+            shots[newShotIndex].draw = false;
             clearInterval(shotAnimation[shots[newShotIndex].id]);
         }
             
         startDrawing++;
     }, 20);
 });
+
+// Shot collision with wall
+function shotWallCollision(shotCollided, direction) {
+    var pushedWall = false;
+    // Wall limitation
+    if (walls !== undefined) {
+        var rows = walls.split('\n');
+        for (var i = 0; i < rows.length; i++) {
+            var cols = rows[i].split('');
+            for (var j = 0; j < cols.length; j++) {
+                var field = cols[j];
+                if (field == '1') {
+                    var xWall = j * 50;
+                    var yWall = i * 50;
+                    shotXPos = shotCollided.position.x;
+                    shotYPos = shotCollided.position.y;
+                    shotXVel = shotCollided.velocity.x;
+                    shotYVel = shotCollided.velocity.y;
+                    nextXPos = shotXPos - shotXVel;
+                    nextYPos = shotYPos - shotYVel;
+                    if (nextXPos >= xWall && nextXPos <= xWall + 50 &&
+                        nextYPos >= yWall && nextYPos <= yWall + 50) {
+                        pushedWall = true;
+                    }
+                }
+            }
+        }
+    }
+    
+    return pushedWall;
+}
 
 var movingOn = false;
 var animation = new Array();
@@ -88,25 +131,36 @@ socket.on('playerMovement', function(data) {
         
         animation[playerMoved.id] = setInterval(function() {
             animationMovement++; // Has to reach 10
-            
-            //console.log(playerMoved);
+                
             switch (data.direction) {
-                case 'left':    playerMoved.x -= 2; break;
-                case 'right':   playerMoved.x += 2; break;
-                case 'up':      playerMoved.y -= 2; break;
-                case 'down':    playerMoved.y += 2; break;
+                case 'left': playerMoved.x -= 2; break;
+                case 'right': playerMoved.x += 2; break;
+                case 'up': playerMoved.y -= 2; break;
+                case 'down': playerMoved.y += 2; break;
             }
-                    
+            
+            var horizontalEffect = false;
+        
             // Add an horizontal infinite effect
-            if (playerMoved.x < 0) {playerMoved.x = 795;}
-            else if (playerMoved.x > 795) {playerMoved.x = 0;}
-                    
+            if (playerMoved.x < 0) {
+                playerMoved.x = 750;
+                horizontalEffect = true;
+            } else if (playerMoved.x > 795) {
+                playerMoved.x = 0;
+                horizontalEffect = true;
+            }
+                        
             // Add an vertical infinite effect
-            if (playerMoved.y < 0) {playerMoved.y = 595;}
-            else if (playerMoved.y > 595) {playerMoved.y = 0;}
-                    
+            if (playerMoved.y < 0) {
+                playerMoved.y = 550;
+                horizontalEffect = true;
+            } else if (playerMoved.y > 595) {
+                playerMoved.y = 0;
+                horizontalEffect = true;
+            }
+                        
             // When the animation is over, stop interval
-            if (animationMovement == 25) {
+            if (animationMovement == 25 || horizontalEffect) {
                 movingOn = false;
                 clearInterval(animation[playerMoved.id]);
             }

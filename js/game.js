@@ -7,12 +7,13 @@
 // Players online (get from server)
 var players = new Array();
 var shots = new Array();
+var walls;
 
 // Define local web browser player
 var player = {
     id:         +new Date(),
     username:   username,
-    x:          randomPosition(750), 
+    x:          randomPosition(750),
     y:          randomPosition(550),
     sprite:     generateRandomSprite(),
     lifes:      3,
@@ -46,11 +47,12 @@ function clearCanvas() {
 // Write elements (sprites, shots, etc) on canvas
 function render() {
     clearCanvas();
-    drawPlayers();
-    drawShots();
-    manageCollisions();
-    drawScore();
-    drawHearts();
+    drawWalls();        // walls
+    drawPlayers();      // players
+    drawShots();        // shots
+    drawScore();        // score
+    drawHearts();       // hearts
+    manageCollisions(); // collisions
 }
 
 function drawPlayers() {
@@ -68,7 +70,7 @@ function drawPlayers() {
             
             // Draw username
             canvasContext.font = "15px Arial";
-            canvasContext.fillStyle = "#000";
+            canvasContext.fillStyle = "#fff";
             canvasContext.textAlign = "center";
             canvasContext.fillText(
                 players[i].username, 
@@ -91,7 +93,35 @@ function drawShots() {
     }
 }
 
+var wallsDrawed = false;
+
+function drawWalls() {
+    if (walls !== undefined) {
+    
+        var rows = walls.split('\n');
+        for (var i = 0; i < rows.length; i++) {
+            var cols = rows[i].split('');
+            for (var j = 0; j < cols.length; j++) {
+                var field = cols[j];
+                if (field == '1') {
+                    var xWall = j * 50;
+                    var yWall = i * 50;
+                        
+                    if (player.x == xWall && player.y == yWall) {
+                        player.x = randomPosition(750);
+                        player.y = randomPosition(550);
+                    }
+                        
+                    canvasContext.fillStyle = "#000";
+                    canvasContext.fillRect(xWall, yWall, 50, 50);
+                }
+            }
+        }
+    }
+}
+
 function manageCollisions() {
+    // Manage shots collisions
     if (shots.length > 0) {
         for (var i = 0; i < shots.length; i++) {
             if (shots[i].draw) {
@@ -117,22 +147,22 @@ function manageCollisions() {
 
 function drawScore() {
     // Draw hearts
-    canvasContext.font = "30px Arial";
-    canvasContext.fillStyle = "#333";
+    canvasContext.font = "25px Arial";
+    canvasContext.fillStyle = "#999";
     canvasContext.textAlign = 'left';
-    canvasContext.fillText('Score: ' + player.score, 10, 30);
+    canvasContext.fillText('Score: ' + player.score, 50, 35);
 }
 
 function drawHearts() {
     // Draw hearts
     canvasContext.font = "30px Arial";
-    canvasContext.fillStyle = "#111";
+    canvasContext.fillStyle = "#999";
     canvasContext.textAlign = 'left';
     var hearts = '';
     for (var i = 0; i < player.lifes; i++) {
         hearts += '♥ ';
     }
-    canvasContext.fillText(hearts, 720, 30);
+    canvasContext.fillText(hearts, 680, 35);
 }
 
 $.getScript('http://' + host + '/blocker/js/clientListener.js');

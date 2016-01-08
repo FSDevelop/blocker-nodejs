@@ -2,6 +2,17 @@
  * UI and game styles
  * @since 1st release
  */
+ 
+* {
+     user-select: none;
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+}
+
+::selection { background: transparent;color:inherit; }
+::-moz-selection { background: transparent;color:inherit; }
 
 body {
     font-family: Verdana;
@@ -39,8 +50,7 @@ body {
     padding: 5px;
 }
 #game {
-    border: 1px solid #ccc;
-    background-color: #eee;
+    background-color: #ccc;
     position: fixed;
 }
 #sprites {display:none}

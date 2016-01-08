@@ -4,6 +4,8 @@ var app = express();
 var http = require('http');
 var server = http.createServer(app);
 var socket = require('socket.io')(server);
+var fs = require('fs');
+var walls;
 
 // Players connected (with name, position, sprite, etc);
 var players = new Array();
@@ -26,11 +28,17 @@ socket.on('connection', function(client) {
 		// Emit to all the players that a new player is connected
 		emitData();
 		
+		// Emit walls to all players
+		fs.readFile('walls', 'utf8', function (err, data) {
+			client.emit('walls', data);
+		});
+		
+		
 		// Checking every second if the player is still connected
 		var lastCycleAlive = 0;
 		var playerIsAlive = setInterval(function() {
 			if (client.lastAlive == lastCycleAlive) {
-				console.log('Disconnected: ' + playerJoined.username);
+				console.log('Player disconnected: ' + playerJoined.username);
 				disconnectPlayer();
 				emitData();
 				clearInterval(playerIsAlive);
@@ -51,22 +59,6 @@ socket.on('connection', function(client) {
 	
 	// When a player is moving
 	client.on('move', function(playerMoved, direction) {
-	    // Finding player on array
-		/*
-	    for (var i = 0; i < players.length; i++) {
-	        if (players[i].id == playerMoved.id) {
-			    // If player already exists update position
-			    players[i].x = playerMoved.x;
-			    players[i].y = playerMoved.y;
-			    players[i].sprite = playerMoved.sprite;
-				client.player = playerMoved;
-	            break;
-	        }
-	    }
-		
-		emitData();
-		*/
-		//console.log('Player moved');
 		client.emit('playerMovement', {
 			playerMoved: playerMoved,
 			direction: direction
@@ -85,7 +77,7 @@ socket.on('connection', function(client) {
 	client.on('attacked', function(attackedPlayer, shoterPlayer) {
 		for (var i = 0; i < players.length; i++) {
 			if (players[i].id === attackedPlayer.id) {
-				console.log('Player attacked');
+				console.log('Player ' + attackedPlayer.username + ' attacked by ' + shoterPlayer.username);
 				players[i].lifes -= 1;
 				
 				if (players[i].lifes <= 0) {
