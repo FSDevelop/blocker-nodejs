@@ -15,7 +15,7 @@ $(function() {
         if (e.keyCode == 13) {
             
             // Validate input
-            if ($(this).val().length <= 6 && $(this).val().length > 1) {
+            if ($(this).val().length <= 10 && $(this).val().length > 1) {
                 
                 $('.username-div').fadeOut(function() {
                     $('.game-content').fadeIn();
