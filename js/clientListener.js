@@ -143,19 +143,19 @@ socket.on('playerMovement', function(data) {
             var horizontalEffect = false;
         
             // Add an horizontal infinite effect
-            if (playerMoved.x < 0) {
+            if (playerMoved.x + 50 <= 0) {
                 playerMoved.x = 750;
                 horizontalEffect = true;
-            } else if (playerMoved.x > 795) {
+            } else if (playerMoved.x >= 800) {
                 playerMoved.x = 0;
                 horizontalEffect = true;
             }
                         
             // Add an vertical infinite effect
-            if (playerMoved.y < 0) {
+            if (playerMoved.y + 50 <= 0) {
                 playerMoved.y = 550;
                 horizontalEffect = true;
-            } else if (playerMoved.y > 595) {
+            } else if (playerMoved.y >= 600) {
                 playerMoved.y = 0;
                 horizontalEffect = true;
             }
