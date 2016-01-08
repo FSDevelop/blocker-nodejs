@@ -12,6 +12,11 @@ socket.on('playersConnected', function(playersConnected) {
     gameLoop();
 });
 
+// When a new player connnects
+socket.on('newPlayer', function(newPlayer) {
+    players.push(newPlayer);
+});
+
 // When a player disconnects
 socket.on('playerDisconnected', function(playerDisconnected) {
     if (players.length > 0) {
@@ -23,4 +28,31 @@ socket.on('playerDisconnected', function(playerDisconnected) {
             }
         }
     }
+});
+
+// When a player is moving
+socket.on('movement', function(movement) {
+    var startMoving = 0;
+    var movementAnimation = setInterval(function() {
+        for (var i = 0; i < players.length; i++) {
+            if (players[i].id == movement.playerId) {
+                var playerToMove = players[i];
+                break;
+            }
+        }
+        
+        switch (movement.direction) {
+            case 'left':    playerToMove.position.x -= 2; break;
+            case 'right':   playerToMove.position.x += 2; break;
+            case 'up':      playerToMove.position.y -= 2; break;
+            case 'down':    playerToMove.position.y += 2; break;
+        }
+        
+        if (startMoving >= 25) {
+            socket.emit('updatePlayer', playerToMove.id, playerToMove.position);
+            clearInterval(movementAnimation);
+        }
+        
+        startMoving++;
+    }, 10);
 });

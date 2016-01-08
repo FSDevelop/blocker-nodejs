@@ -31,7 +31,7 @@ function gameLoop() {
         render();
         frame++;
         
-        if (frame % 1000 == 0) {
+        if (frame % FPS == 0) {
             socket.emit('stillAlive', +new Date());
         }
     }, 1000 / FPS);
@@ -61,6 +61,15 @@ function drawPlayers() {
             context.fillStyle = '#000';
             context.arc(p.position.x, p.position.y, 25, 0, Math.PI * 180);
             context.stroke();
+            
+            // Draw username
+            context.font = "18px Arial";
+            context.fillStyle = "#fff";
+            context.textAlign = "center";
+            context.fillText(p.username, p.position.x, p.position.y + 5);
         }
     }
 }
+
+$.getScript(host + '/blocker/js/keyboardListener.js');
+$.getScript(host + '/blocker/js/mouseListener.js');
