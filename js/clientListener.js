@@ -18,7 +18,7 @@ socket.on('updateData', function(res) {
     }
     for (var i = 0; i < playersSorted.length; i++) {
         $('.game-content .players ul').append(
-            '<li>' + playersSorted[i].username + ' ( ' + playersSorted[i].score + ' )</li>'
+            '<li><a href="#">' + playersSorted[i].username + ' (' + playersSorted[i].score + ')</a></li>'
         );
     }
 });
@@ -141,11 +141,12 @@ socket.on('playerMovement', function(data) {
     }
     
     if ((playerMoved.id == player.id && !movingOn) || playerMoved.id != player.id) {
-        animationMovement[playerMoved.id] = 0;
+        var thisAnimation = animation.push(playerMoved.id)
+        animationMovement[thisAnimation] = 0;
         movingOn = (playerMoved.id == player.id) ? true : movingOn;
         
-        animation[playerMoved.id] = setInterval(function() {
-            animationMovement[playerMoved.id]++; // Has to reach 10
+        animation[thisAnimation] = setInterval(function() {
+            animationMovement[thisAnimation]++; // Has to reach 10
                 
             switch (data.direction) {
                 case 'left':    playerMoved.x -= 2; break;
@@ -175,9 +176,9 @@ socket.on('playerMovement', function(data) {
             }
                         
             // When the animation is over, stop interval
-            if (animationMovement[playerMoved.id] == 25 || horizontalEffect) {
+            if (animationMovement[thisAnimation] >= 25 || horizontalEffect) {
                 movingOn = (playerMoved.id == player.id) ? false : movingOn;
-                clearInterval(animation[playerMoved.id]);
+                clearInterval(animation[thisAnimation]);
             }
         }, 10);
     }

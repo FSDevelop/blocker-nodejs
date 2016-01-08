@@ -39,7 +39,7 @@ body {
 .game-content .players p:not(:first-child) strong {
     font-weight: bold;
 }
-.game-content .players ul {
+/*.game-content .players ul {
     margin-top: 20px;
     border-top: 1px solid #ddd;
     width: 180px;
@@ -49,6 +49,7 @@ body {
     border-top: 0;
     padding: 5px;
 }
+*/
 #game {
     background-color: #ccc;
     position: fixed;
