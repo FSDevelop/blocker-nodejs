@@ -24,7 +24,7 @@ var player = {
 var sprites = document.getElementById("sprites");
 var canvas;         // Canvas element
 var canvasContext;  // Canvas context (where things will be rendered)
-var socket = io.connect('http://' + host + ':8080'); // Make connection with server
+var socket = io.connect('http://' + host + ':8081'); // Make connection with server
 
 // Tell the server that there is a new player
 socket.emit('join', player);
@@ -110,6 +110,7 @@ function drawWalls() {
                     if (player.x == xWall && player.y == yWall) {
                         player.x = randomPosition(750);
                         player.y = randomPosition(550);
+                        socket.emit('updatePlayer', player);
                     }
                         
                     canvasContext.fillStyle = "#000";

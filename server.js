@@ -48,6 +48,16 @@ socket.on('connection', function(client) {
 		}, 1000);
 	});
 	
+	socket.on('updatePlayer', function(playerUpdated) {
+		for (var i = 0; i < players.length; i++) {
+		    if (players[i].id == playerUpdated.id) {
+				players[i] = playerUpdated;
+		    }
+		}
+		// Emit to all the players that a new player is connected
+		emitData();
+	});
+	
 	function disconnectPlayer() {
 		for (var i = 0; i < players.length; i++) {
 		    if (players[i].id == client.player.id) {
@@ -111,6 +121,6 @@ app.get('/blocker', function(req, res) {
 });
 
 // Listening to the port 8080 http://localhost:8080/blocker
-server.listen(8080, function() {
+server.listen(8081, function() {
 	console.log('Waiting for players...');
 });

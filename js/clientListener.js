@@ -115,28 +115,29 @@ function shotWallCollision(shotCollided, direction) {
 
 var movingOn = false;
 var animation = new Array();
+var animationMovement = new Array();
 
 socket.on('playerMovement', function(data) {
     var playerMoved = data.playerMoved;
     
     for (var i = 0; i < players.length; i++) {
         if (players[i].id == playerMoved.id) {
-            var playerMoved = players[i];
+            playerMoved = players[i];
         }
     }
     
     if ((playerMoved.id == player.id && !movingOn) || playerMoved.id != player.id) {
-        animationMovement = 0;
-        movingOn = true;
+        animationMovement[playerMoved.id] = 0;
+        movingOn = (playerMoved.id == player.id) ? true : movingOn;
         
         animation[playerMoved.id] = setInterval(function() {
-            animationMovement++; // Has to reach 10
+            animationMovement[playerMoved.id]++; // Has to reach 10
                 
             switch (data.direction) {
-                case 'left': playerMoved.x -= 2; break;
-                case 'right': playerMoved.x += 2; break;
-                case 'up': playerMoved.y -= 2; break;
-                case 'down': playerMoved.y += 2; break;
+                case 'left':    playerMoved.x -= 2; break;
+                case 'right':   playerMoved.x += 2; break;
+                case 'up':      playerMoved.y -= 2; break;
+                case 'down':    playerMoved.y += 2; break;
             }
             
             var horizontalEffect = false;
@@ -160,8 +161,8 @@ socket.on('playerMovement', function(data) {
             }
                         
             // When the animation is over, stop interval
-            if (animationMovement == 25 || horizontalEffect) {
-                movingOn = false;
+            if (animationMovement[playerMoved.id] == 25 || horizontalEffect) {
+                movingOn = (playerMoved.id == player.id) ? false : movingOn;
                 clearInterval(animation[playerMoved.id]);
             }
         }, 10);
