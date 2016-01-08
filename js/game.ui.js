@@ -1,10 +1,10 @@
 /**
  * UI functionality (first script to run)
- * @since 1st release
+ * @since January, 2016
  */
 
 var username;
-var host = '192.168.1.35';
+var host = 'http://192.168.1.35/';
 
 $(function() {
     // Focus the input
@@ -18,7 +18,7 @@ $(function() {
             if ($(this).val().length <= 10 && $(this).val().length > 1) {
                 
                 $('.username-div').fadeOut(function() {
-                    $('.game-content').fadeIn();
+                    $('#game').fadeIn();
                 });
                 
                 // Set username and load game
@@ -26,8 +26,8 @@ $(function() {
                 
                 // Start the game
                 setTimeout(function() {
-                    $.getScript('http://' + host + '/blocker/js/gameUtility.js');
-                    $.getScript('http://' + host + '/blocker/js/game.js');
+                    $.getScript(host + 'blocker/js/gameUtility.js');
+                    $.getScript(host + 'blocker/js/game.js');
                 }, 500);
                 
             } else {

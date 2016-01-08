@@ -1,6 +1,6 @@
 /**
  * UI and game styles
- * @since 1st release
+ * @since January, 2016
  */
  
 * {
@@ -10,51 +10,19 @@
     -moz-user-select: -moz-none;
     -webkit-user-select: none;
 }
-
 ::selection { background: transparent;color:inherit; }
 ::-moz-selection { background: transparent;color:inherit; }
-
 body {
     font-family: Verdana;
     color: #333;
 }
-.game-content {
-    display: none;
-    position: fixed;
-    left: calc(50% - 500px);
-    top: calc(50% - 300px);
-    font-family: Arial;
-}
-.game-content .players {
-    float: left;
-    width: 200px;
-}
-.game-content .players p:first-child {
-    font-weight: bold;
-    margin-top: 10px;
-}
-.game-content .players p:not(:first-child) {
-    margin-bottom: 5px;
-}
-.game-content .players p:not(:first-child) strong {
-    font-weight: bold;
-}
-/*.game-content .players ul {
-    margin-top: 20px;
-    border-top: 1px solid #ddd;
-    width: 180px;
-}
-.game-content .players ul li {
-    border: 1px solid #ddd;
-    border-top: 0;
-    padding: 5px;
-}
-*/
 #game {
-    background-color: #ccc;
+    background-color: #CCCCCC;
     position: fixed;
+    left: calc(50% - 400px);
+    top: calc(50% - 300px);
+    display: none
 }
-#sprites {display:none}
 body .username-div {
     width: 20%;
     position: fixed;
