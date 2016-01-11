@@ -4,7 +4,7 @@
  */
 
 var username;
-var host = 'http://192.168.1.34';
+var host = 'http://192.168.0.99';
 
 $(function() {
     // Focus the input
