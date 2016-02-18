@@ -12,7 +12,7 @@ $(prepareGame);
 
 function prepareGame() {
     // Get server listener
-    $.getScript(host + '/blocker/js/serverListener.js', function() {
+    $.getScript(host + '/blocker/js/listeners/server.js', function() {
         // Define canvas element
         canvas = document.getElementById('game');
         context = canvas.getContext('2d');
@@ -71,5 +71,5 @@ function drawPlayers() {
     }
 }
 
-$.getScript(host + '/blocker/js/keyboardListener.js');
-$.getScript(host + '/blocker/js/mouseListener.js');
+$.getScript(host + '/blocker/js/listeners/keyboard.js');
+$.getScript(host + '/blocker/js/listeners/mouse.js');
