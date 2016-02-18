@@ -32,7 +32,7 @@ socket.on('playerDisconnected', function(playerDisconnected) {
 
 // When a player is moving
 socket.on('movement', function(movement) {
-    var startMoving = 0;
+    var startMoving = 1;
     var movementAnimation = setInterval(function() {
         for (var i = 0; i < players.length; i++) {
             if (players[i].id == movement.playerId) {
@@ -48,7 +48,7 @@ socket.on('movement', function(movement) {
             case 'down':    playerToMove.position.y += 2; break;
         }
         
-        if (startMoving >= 25) {
+        if (startMoving == 25) {
             socket.emit('updatePlayer', playerToMove.id, playerToMove.position);
             clearInterval(movementAnimation);
         }
