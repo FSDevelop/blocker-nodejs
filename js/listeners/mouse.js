@@ -17,16 +17,18 @@ function shot() {
     if (canShot) {
         canShot = false;
         
+        // x, y mouse position when clicked
         var destination = {
             x: mouseEvent.x - canvas.offsetLeft,
             y: mouseEvent.y - canvas.offsetTop
         };
         
+        // distance between player position and clicked position
         var distance = {
             x: Math.abs((player.x + 25) - destination.x),
             y: Math.abs((player.y + 50) - destination.y)
         };
-                
+        
         var totalDistance = distance.x + distance.y;
         var totalFPS = 6;
 
@@ -34,7 +36,8 @@ function shot() {
             x: distance.x * totalFPS / totalDistance,
             y: distance.y * totalFPS / totalDistance
         };
-                
+        
+        // shot definition        
         var shot = {
             id:             +new Date(),
             shoter:         player,
@@ -44,8 +47,10 @@ function shot() {
             draw:           false
         };
                 
+        // emit to server that there is a new shot on the field
         socket.emit('shot', shot);
         
+        // allow to shot again after 0.3 seconds
         setTimeout(function() {
             canShot = true;
         }, 300);
