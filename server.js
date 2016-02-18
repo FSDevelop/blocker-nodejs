@@ -37,13 +37,6 @@ io.on('connection', function(client) {
 		client.lastConnection = time;
 	});
 	
-	// When a player is moving
-	client.on('movement', function(playerId, direction) {
-		var data = { playerId: playerId, direction: direction };
-		client.emit('movement', data);
-		client.broadcast.emit('movement', data);
-	});
-	
 	// When there is no alive update, disconnect player
 	function manageDisconnection() {
 		var lastConnection = 0;
@@ -56,7 +49,7 @@ io.on('connection', function(client) {
 			}
 			lastConnection = client.lastConnection;
 		}, 5000);
-	}
+	};
 	
 	// Remove player from array
 	function removePlayer(player) {
@@ -67,7 +60,24 @@ io.on('connection', function(client) {
 				}
 			}
 		}
-	}
+	};
+	
+	// When a player is moving
+	client.on('movement', function(playerId, direction) {
+		var data = { playerId: playerId, direction: direction };
+		emit2All('movement', data);
+	});
+	
+	// When someone shots a bullet
+	client.on('shot', function(shot) {
+		emit2All('shot', shot);
+	});
+	
+	// Emits data to the client and to everyone connected
+	function emit2All(name, data) {
+		client.emit(name, data);
+		client.broadcast.emit(name, data);
+	};
 });
 
 app.get('/blocker', function(req, res) {

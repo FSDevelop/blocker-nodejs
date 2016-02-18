@@ -56,3 +56,7 @@ socket.on('movement', function(movement) {
         startMoving++;
     }, 10);
 });
+
+socket.on('shot', function(shot) {
+    console.log(shot);
+});
