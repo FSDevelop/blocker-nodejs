@@ -1,5 +1,6 @@
 /**
  * Server listener
+ * also contain sprite animations
  * @since January, 2016
  */
 
@@ -64,5 +65,16 @@ socket.on('movement', function(movement) {
 
 socket.on('shot', function(data) {
     shot = new Shot(data);
-    shots.push(shot);
+    var shotId = shots.push(shot) - 1;
+    
+    var startDrawing = 0;
+    var shotAnimation = setInterval(function() {
+        if (startDrawing > 5) {
+            shots[shotId].draw = true;
+        }
+        
+        shots[shotId].position.x -= shots[shotId].velocity.x;
+        shots[shotId].position.y -= shots[shotId].velocity.y;
+        startDrawing++;
+    }, 10);
 });

@@ -23,11 +23,11 @@ function requestShot(mouseEvent) {
         
         // distance between player position and clicked position
         var distance = {
-            x: Math.abs(player.position.x - destination.x),
-            y: Math.abs(player.position.y - destination.y)
+            x: player.position.x - destination.x,
+            y: player.position.y - destination.y
         };
         
-        var totalDistance = distance.x + distance.y;
+        var totalDistance = Math.abs(distance.x) + Math.abs(distance.y);
         var totalFPS = 6;
 
         var velocity = {

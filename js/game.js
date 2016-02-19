@@ -77,10 +77,12 @@ function drawShots() {
     if (shots.length > 0) {
         for (var i = 0; i < shots.length; i++) {
             s = shots[i];
-            context.beginPath();
-            context.fillStyle = s.shoter.color;
-            context.arc(s.position.x, s.position.y, 5, 0, Math.PI * 180);
-            context.stroke();
+            if (s.draw) {
+                context.beginPath();
+                context.fillStyle = s.shoter.color;
+                context.arc(s.position.x, s.position.y, 5, 0, Math.PI * 180);
+                context.stroke();
+            }
         }
     }
 }
