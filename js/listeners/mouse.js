@@ -5,15 +5,13 @@
  */
 
 var canShot = true;
-var mouseEvent;
 
 // On shoting
 window.addEventListener('mousedown', function(e) {
-    mouseEvent = e;
-    shot();
+    shot(e);
 });
 
-function shot() {
+function shot(mouseEvent) {
     if (canShot) {
         canShot = false;
         
@@ -25,8 +23,8 @@ function shot() {
         
         // distance between player position and clicked position
         var distance = {
-            x: Math.abs((player.x + 25) - destination.x),
-            y: Math.abs((player.y + 50) - destination.y)
+            x: Math.abs(player.position.x - destination.x),
+            y: Math.abs(player.position.y - destination.y)
         };
         
         var totalDistance = distance.x + distance.y;
@@ -41,8 +39,8 @@ function shot() {
         var shot = {
             id:             +new Date(),
             shoter:         player,
-            origin:         { x: player.x + 25, y: player.y + 25 },
-            position:       { x: player.x + 25, y: player.y + 25 },
+            origin:         player.position,
+            position:       player.position,
             velocity:       { x: velocity.x, y: velocity.y },
             draw:           false
         };

@@ -51,6 +51,11 @@ socket.on('movement', function(movement) {
         if (startMoving == 25) {
             socket.emit('updatePlayer', playerToMove.id, playerToMove.position);
             clearInterval(movementAnimation);
+            
+            // if the player moved was you, then update your player position
+            if (playerToMove.id == player.id) {
+                player = playerToMove;
+            }
         }
         
         startMoving++;
