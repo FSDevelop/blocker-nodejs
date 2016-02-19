@@ -87,5 +87,7 @@ function drawShots() {
     }
 }
 
+// Import event listeners
 $.getScript(host + '/blocker/js/listeners/keyboard.js');
 $.getScript(host + '/blocker/js/listeners/mouse.js');
+$.getScript(host + '/blocker/js/listeners/collisions.js');
