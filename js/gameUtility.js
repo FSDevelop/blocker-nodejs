@@ -31,10 +31,10 @@ function randomPosition() {
     maxX = canvas.width - 25;
     maxY = canvas.height - 25;
     
-    while (randomX % 75 != 0)
+    while (randomX % 75 != 0 || randomX <= 0)
       randomX = Math.floor((Math.random() * maxX));
     
-    while (randomY % 75 != 0)
+    while (randomY % 75 != 0 || randomY <= 0)
       randomY = Math.floor((Math.random() * maxY));
     
     return { x: randomX, y: randomY };

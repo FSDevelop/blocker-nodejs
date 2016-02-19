@@ -81,7 +81,7 @@ function drawShots() {
                 context.beginPath();
                 context.fillStyle = s.shoter.color;
                 context.arc(s.position.x, s.position.y, 5, 0, Math.PI * 180);
-                context.stroke();
+                context.fill();
             }
         }
     }
