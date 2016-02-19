@@ -62,6 +62,7 @@ socket.on('movement', function(movement) {
     }, 10);
 });
 
-socket.on('shot', function(shot) {
-    console.log(shot);
+socket.on('shot', function(data) {
+    shot = new Shot(data);
+    shots.push(shot);
 });

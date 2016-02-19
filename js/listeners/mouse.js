@@ -8,10 +8,10 @@ var canShot = true;
 
 // On shoting
 window.addEventListener('mousedown', function(e) {
-    shot(e);
+    requestShot(e);
 });
 
-function shot(mouseEvent) {
+function requestShot(mouseEvent) {
     if (canShot) {
         canShot = false;
         

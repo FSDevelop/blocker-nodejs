@@ -6,6 +6,7 @@
  
 var canvas, context, player;
 var players = new Array();
+var shots = new Array();
 var FPS = 60; // Frames per second
 
 $(prepareGame);
@@ -41,8 +42,9 @@ function render() {
     // Clear canvas
     canvas.width = canvas.width;
     
-    // Start drawing all players
+    // Start drawing things
     drawPlayers();
+    drawShots();
 }
 
 function drawPlayers() {
@@ -67,6 +69,18 @@ function drawPlayers() {
             context.fillStyle = "#fff";
             context.textAlign = "center";
             context.fillText(p.username, p.position.x, p.position.y + 5);
+        }
+    }
+}
+
+function drawShots() {
+    if (shots.length > 0) {
+        for (var i = 0; i < shots.length; i++) {
+            s = shots[i];
+            context.beginPath();
+            context.fillStyle = s.shoter.color;
+            context.arc(s.position.x, s.position.y, 5, 0, Math.PI * 180);
+            context.stroke();
         }
     }
 }

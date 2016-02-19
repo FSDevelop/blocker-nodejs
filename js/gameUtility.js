@@ -15,6 +15,16 @@ function createPlayer() {
     };
 }
 
+// new shot class
+function Shot(data) {
+    this.id         = +new Date();
+    this.shoter     = data.shoter;
+    this.origin     = data.origin;
+    this.position   = data.position;
+    this.velocity   = data.velocity;
+    this.draw       = data.draw;
+}
+
 function randomPosition() {
     randomX = 1;
     randomY = 1;
