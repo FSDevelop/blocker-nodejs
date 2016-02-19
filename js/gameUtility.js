@@ -4,15 +4,14 @@
  * @since   January, 2016
  */
 
-function createPlayer() {
-    return {
-        id:         +new Date(),
-        username:   username,
-        position:   randomPosition(),
-        lifes:      3,
-        score:      0,
-        color:      '#' + Math.floor( Math.random() * 11777215 ).toString(16)
-    };
+// new player class
+function Player() {
+    this.id         = +new Date();
+    this.username   = username;
+    this.position   = randomPosition();
+    this.lifes      = 3;
+    this.score      = 0;
+    this.color      = '#' + Math.floor( Math.random() * 11777215 ).toString(16);
 }
 
 // new shot class
@@ -25,6 +24,7 @@ function Shot(data) {
     this.draw       = data.draw;
 }
 
+// generates a random player position
 function randomPosition() {
     randomX = 1;
     randomY = 1;

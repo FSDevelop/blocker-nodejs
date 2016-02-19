@@ -19,7 +19,7 @@ function prepareGame() {
         context = canvas.getContext('2d');
             
         // Create local player
-        player = createPlayer();
+        player = new Player();
         
         // Tell the server there is a new player
         socket.emit('join', player);
