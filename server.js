@@ -13,7 +13,7 @@ var shots = new Array();
 
 // On player connected
 socket.on('connection', function(client) {
-	
+
 	// When a player join the game
 	client.on('join', function(playerJoined) {
 		console.log('Player connected: ' + playerJoined.username);
@@ -123,9 +123,7 @@ socket.on('connection', function(client) {
 	});
 });
 
-app.get('/blocker', function(req, res) {
-	res.sendFile(__dirname + '/index.html');
-});
+app.use('/blocker', express.static(__dirname));
 
 // Listening to the port 8080 http://localhost:8080/blocker
 server.listen(8080, function() {
